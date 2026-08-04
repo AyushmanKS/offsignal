@@ -105,8 +105,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   widthFactor: 1,
                   child: Text(
                     strings.actionSkip,
-                    style: Theme.of(context).textTheme.labelMedium
-                        ?.copyWith(color: palette.textMuted),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelMedium?.copyWith(color: palette.textMuted),
                   ),
                 ),
               ),
@@ -118,8 +119,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               controller: _pageController,
               itemCount: panels.length,
               onPageChanged: (index) => setState(() => _index = index),
-              itemBuilder: (context, index) =>
-                  _PanelView(panel: panels[index]),
+              itemBuilder: (context, index) => _PanelView(panel: panels[index]),
             ),
           ),
           const SizedBox(height: AppSpacing.md),

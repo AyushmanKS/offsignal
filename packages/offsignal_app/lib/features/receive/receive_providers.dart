@@ -92,9 +92,10 @@ final class ReceiveController extends Notifier<ReceiveState> {
     try {
       final status = await Permission.camera.request();
       final access = switch (status) {
-        PermissionStatus.granted || PermissionStatus.limited => CameraAccess.granted,
-        PermissionStatus.permanentlyDenied || PermissionStatus.restricted =>
-          CameraAccess.permanentlyDenied,
+        PermissionStatus.granted ||
+        PermissionStatus.limited => CameraAccess.granted,
+        PermissionStatus.permanentlyDenied ||
+        PermissionStatus.restricted => CameraAccess.permanentlyDenied,
         _ => CameraAccess.denied,
       };
       state = state.copyWith(
@@ -121,9 +122,10 @@ final class ReceiveController extends Notifier<ReceiveState> {
     try {
       final status = await Permission.camera.status;
       final access = switch (status) {
-        PermissionStatus.granted || PermissionStatus.limited => CameraAccess.granted,
-        PermissionStatus.permanentlyDenied || PermissionStatus.restricted =>
-          CameraAccess.permanentlyDenied,
+        PermissionStatus.granted ||
+        PermissionStatus.limited => CameraAccess.granted,
+        PermissionStatus.permanentlyDenied ||
+        PermissionStatus.restricted => CameraAccess.permanentlyDenied,
         PermissionStatus.denied => CameraAccess.unknown,
         _ => CameraAccess.denied,
       };
@@ -192,13 +194,10 @@ final class ReceiveController extends Notifier<ReceiveState> {
     final verified = await _runVerification(compressed);
     if (_isDisposed) return;
 
-    verified.fold(
-      (envelope) {
-        ref.read(receivedPayloadProvider.notifier).state = envelope;
-        state = state.copyWith(phase: ReceivePhase.delivered);
-      },
-      (_) => _failVerification(),
-    );
+    verified.fold((envelope) {
+      ref.read(receivedPayloadProvider.notifier).state = envelope;
+      state = state.copyWith(phase: ReceivePhase.delivered);
+    }, (_) => _failVerification());
   }
 
   void _failVerification() {

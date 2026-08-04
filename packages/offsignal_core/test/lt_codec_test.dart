@@ -94,7 +94,9 @@ void main() {
       final histogram = <int, int>{};
       const samples = 10000;
       for (var i = 0; i < samples; i++) {
-        final degree = parsePacket(encoder.nextPacket()).valueOrNull!.indices.length;
+        final degree = parsePacket(
+          encoder.nextPacket(),
+        ).valueOrNull!.indices.length;
         histogram.update(degree, (value) => value + 1, ifAbsent: () => 1);
       }
 

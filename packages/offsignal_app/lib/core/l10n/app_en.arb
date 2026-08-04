@@ -32,7 +32,7 @@
   "composeChooseFile": "Choose a file",
   "composeChooseFileHint": "An image, PDF, or small document",
   "composeRemoveFile": "Remove file",
-  "composeEstimateBlocks": "{count} blocks",
+  "composeEstimateBlocks": "{count, plural, =1{1 block} other{{count} blocks}}",
   "@composeEstimateBlocks": {
     "placeholders": { "count": { "type": "int" } }
   },

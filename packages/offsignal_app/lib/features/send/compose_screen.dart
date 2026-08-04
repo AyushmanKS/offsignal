@@ -173,8 +173,9 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
             if (compose.showsLargePayloadNotice) ...[
               const SizedBox(height: AppSpacing.md),
               _LargePayloadNotice(
-                onDismiss: () =>
-                    ref.read(composeProvider.notifier).dismissLargePayloadNotice(),
+                onDismiss: () => ref
+                    .read(composeProvider.notifier)
+                    .dismissLargePayloadNotice(),
               ),
             ],
           ],
@@ -373,8 +374,14 @@ class _EstimateStrip extends StatelessWidget {
             strings.composeEstimateBlocks(plan.blockCount),
             formatBytes(strings, plan.compressedBytes),
             strings.composeEstimateBand(
-              plan.durationBand(const Duration(milliseconds: 120)).fastest.inSeconds,
-              plan.durationBand(const Duration(milliseconds: 120)).slowest.inSeconds,
+              plan
+                  .durationBand(const Duration(milliseconds: 120))
+                  .fastest
+                  .inSeconds,
+              plan
+                  .durationBand(const Duration(milliseconds: 120))
+                  .slowest
+                  .inSeconds,
             ),
           ].join('  ·  ');
 

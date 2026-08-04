@@ -8,3 +8,4 @@ environment:
 workspace:
   - packages/offsignal_core
   - packages/offsignal_app
+  - packages/offsignal_tools

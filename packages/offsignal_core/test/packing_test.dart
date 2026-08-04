@@ -67,14 +67,22 @@ void main() {
     });
 
     test('rejects an empty payload', () {
-      final result = packPayload(envelopeOf('empty.bin', 'application/octet-stream', []));
+      final result = packPayload(
+        envelopeOf('empty.bin', 'application/octet-stream', []),
+      );
       expect(result.errorOrNull, isA<EmptyPayload>());
     });
   });
 
   group('integrity gate', () {
     test('a wrong digest is caught, never silently accepted', () {
-      final envelope = envelopeOf('doc.pdf', 'application/pdf', [1, 2, 3, 4, 5]);
+      final envelope = envelopeOf('doc.pdf', 'application/pdf', [
+        1,
+        2,
+        3,
+        4,
+        5,
+      ]);
       final wrongDigest = computeChecksum(utf8.encode('not the payload'));
 
       final result = unpackPayload(framedWithDigest(envelope, wrongDigest));

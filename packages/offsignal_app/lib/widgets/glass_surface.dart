@@ -39,7 +39,11 @@ class GlassSurface extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color.lerp(palette.borderHighlight, glowColor, accentStrength * 0.6)!,
+            Color.lerp(
+              palette.borderHighlight,
+              glowColor,
+              accentStrength * 0.6,
+            )!,
             palette.borderShadow,
           ],
         ),

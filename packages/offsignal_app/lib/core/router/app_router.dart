@@ -41,7 +41,10 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.onboarding,
         builder: (_, _) => const OnboardingScreen(),
       ),
-      _route(path: AppRoutes.settings, builder: (_, _) => const SettingsScreen()),
+      _route(
+        path: AppRoutes.settings,
+        builder: (_, _) => const SettingsScreen(),
+      ),
       _route(
         path: AppRoutes.send,
         builder: (_, _) => const ComposeScreen(),

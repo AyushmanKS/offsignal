@@ -96,7 +96,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String composeEstimateBlocks(int count) {
-    return '$count blocks';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count blocks',
+      one: '1 block',
+    );
+    return '$_temp0';
   }
 
   @override

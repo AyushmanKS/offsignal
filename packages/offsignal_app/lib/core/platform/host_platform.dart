@@ -1,6 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-enum HostPlatform { iosNative, androidNative, iosWeb, androidWeb, otherWeb, other }
+enum HostPlatform {
+  iosNative,
+  androidNative,
+  iosWeb,
+  androidWeb,
+  otherWeb,
+  other,
+}
 
 extension HostPlatformTraits on HostPlatform {
   bool get isWeb =>

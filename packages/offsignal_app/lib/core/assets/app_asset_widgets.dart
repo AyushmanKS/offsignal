@@ -17,13 +17,20 @@ class AppIcon extends StatelessWidget {
       path,
       width: size,
       height: size,
-      colorFilter: color == null ? null : ColorFilter.mode(color!, BlendMode.srcIn),
+      colorFilter: color == null
+          ? null
+          : ColorFilter.mode(color!, BlendMode.srcIn),
     );
   }
 }
 
 class AppSuccessAnimation extends StatelessWidget {
-  const AppSuccessAnimation({super.key, this.size = 120, this.repeat = false, this.onComplete});
+  const AppSuccessAnimation({
+    super.key,
+    this.size = 120,
+    this.repeat = false,
+    this.onComplete,
+  });
 
   final double size;
   final bool repeat;

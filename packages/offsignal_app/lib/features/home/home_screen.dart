@@ -47,7 +47,10 @@ class HomeScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(strings.appName, style: Theme.of(context).textTheme.displayLarge),
+            Text(
+              strings.appName,
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
             const SizedBox(height: AppSpacing.sm + 2),
             Text(
               strings.appTagline,
@@ -128,7 +131,9 @@ class _ModeCard extends StatelessWidget {
                     width: 1,
                   ),
                 ),
-                child: Center(child: AppIcon(iconPath, size: 24, color: accent)),
+                child: Center(
+                  child: AppIcon(iconPath, size: 24, color: accent),
+                ),
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(

@@ -209,10 +209,7 @@ class _TextResult extends StatelessWidget {
             style: AppTextStyles.statLabel(context),
           ),
           const SizedBox(height: AppSpacing.sm),
-          SelectableText(
-            text,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
+          SelectableText(text, style: Theme.of(context).textTheme.bodyLarge),
         ],
       ),
     );

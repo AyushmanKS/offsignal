@@ -42,7 +42,8 @@ final class AppSettings {
 }
 
 final sharedPreferencesProvider = Provider<SharedPreferences>(
-  (ref) => throw UnimplementedError('sharedPreferencesProvider must be overridden'),
+  (ref) =>
+      throw UnimplementedError('sharedPreferencesProvider must be overridden'),
 );
 
 final settingsProvider = NotifierProvider<SettingsController, AppSettings>(

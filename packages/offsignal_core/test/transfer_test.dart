@@ -48,7 +48,10 @@ void main() {
         decodeFrame('https://example.com').errorOrNull,
         isA<MalformedPacket>(),
       );
-      expect(decodeFrame('OS1:not base64!!').errorOrNull, isA<MalformedPacket>());
+      expect(
+        decodeFrame('OS1:not base64!!').errorOrNull,
+        isA<MalformedPacket>(),
+      );
     });
 
     test('a foreign QR code never enters the decoder session', () {
@@ -95,7 +98,10 @@ void main() {
 
       final delivered = outcome.receiver.finish().valueOrNull!;
       expect(utf8.decode(delivered.bytes), 'a' * 5000);
-      expect(outcome.receiver.framesRead, greaterThan(outcome.receiver.framesAccepted));
+      expect(
+        outcome.receiver.framesRead,
+        greaterThan(outcome.receiver.framesAccepted),
+      );
     });
 
     test('progress only ever increases', () {
@@ -176,7 +182,10 @@ void main() {
 
       expect(sender.plan.blockCount, greaterThan(0));
       expect(sender.plan.compressedBytes, lessThan(20000));
-      expect(sender.plan.expectedPacketCount, greaterThan(sender.plan.blockCount));
+      expect(
+        sender.plan.expectedPacketCount,
+        greaterThan(sender.plan.blockCount),
+      );
       expect(sender.packetsEmitted, 0);
 
       sender.nextFrame();

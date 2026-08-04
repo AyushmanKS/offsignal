@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>OffSignal — Privacy Policy</title>
+  <style>
+    :root {
+      color-scheme: dark light;
+      --bg: #0A0E14;
+      --surface: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #EDEEF3;
+      --muted: #8A94A6;
+      --accent: #4FD8FF;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #F4F6FA;
+        --surface: rgba(255, 255, 255, 0.72);
+        --border: rgba(20, 30, 45, 0.08);
+        --text: #12151C;
+        --muted: #5B6472;
+        --accent: #0EA5C4;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 2.5rem 1.25rem 4rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      -webkit-text-size-adjust: 100%;
+    }
+    main { max-width: 42rem; margin: 0 auto; }
+    h1 { font-size: 1.9rem; line-height: 1.2; letter-spacing: -0.02em; margin: 0 0 0.35rem; }
+    h2 { font-size: 1.15rem; margin: 2rem 0 0.5rem; letter-spacing: -0.01em; }
+    p, li { color: var(--muted); }
+    .lede { font-size: 1.05rem; margin-bottom: 2rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .card strong { color: var(--text); }
+    ul { padding-left: 1.15rem; }
+    li { margin-bottom: 0.4rem; }
+    footer { margin-top: 3rem; font-size: 0.85rem; color: var(--muted); }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>OffSignal Privacy Policy</h1>
+  <p class="lede">Last updated: 4 August 2026</p>
+
+  <div class="card">
+    <p><strong>OffSignal does not collect your data.</strong> What you send never leaves the two
+      phones involved in a transfer. There are no accounts, no servers, and no analytics on
+      transferred content.</p>
+  </div>
+
+  <h2>What OffSignal does with what you send</h2>
+  <p>OffSignal moves a note, link, or small file from one device to another by displaying a
+    sequence of QR codes on one screen and reading them with the other device's camera. That
+    transfer happens entirely over light.</p>
+  <ul>
+    <li>Your message text, file contents, and file names exist only in memory for the duration of
+      a session.</li>
+    <li>Nothing you send is uploaded, logged, or stored on any server.</li>
+    <li>Nothing is written to disk unless you explicitly choose Save or Share, which hands the
+      file to your operating system at your request.</li>
+    <li>Closing the app discards the payload.</li>
+  </ul>
+
+  <h2>Camera</h2>
+  <p>Receiving requires camera access so the app can read the QR codes on the other screen. Camera
+    frames are processed on your device to decode the signal and are never recorded, saved, or
+    transmitted. OffSignal only uses the camera while you are on the scanning screen, and releases
+    it as soon as you stop, finish, leave the screen, or send the app to the background.</p>
+
+  <h2>Settings stored on your device</h2>
+  <p>OffSignal saves a small number of preferences locally on your device: your theme choice, your
+    default cycle speed, whether haptics are on, and whether you have seen the intro. These never
+    leave your device and contain nothing about what you have sent or received.</p>
+
+  <h2>Network access</h2>
+  <p>OffSignal is designed to work fully offline, including in airplane mode. All fonts, icons, and
+    animations are bundled with the app and are never fetched at runtime.</p>
+  <p>If a build ships with crash reporting enabled, anonymous crash and error reports are the only
+    network requests the app ever makes. Those reports are scrubbed before they are sent: they
+    contain the screen name, exception type, and stack trace only. Message text, file contents, and
+    file names are explicitly stripped and are never included.</p>
+
+  <h2>Children</h2>
+  <p>OffSignal collects no personal information from anyone, including children.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes, the updated version will be published at this address with a revised
+    date above.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this policy can be raised on the project's issue tracker.</p>
+
+  <footer>OffSignal — no accounts, no cloud, no radio.</footer>
+</main>
+</body>
+</html>

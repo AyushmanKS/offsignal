@@ -118,7 +118,13 @@ class _OrbPainter extends CustomPainter {
 
   double _wave(double radians) => 0.5 * (1 + math.sin(radians));
 
-  void _orb(Canvas canvas, Size size, Offset center, double radius, Color color) {
+  void _orb(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    double radius,
+    Color color,
+  ) {
     final paint = Paint()
       ..shader = RadialGradient(
         colors: [color, color.withValues(alpha: 0)],

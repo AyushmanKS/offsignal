@@ -97,7 +97,10 @@ abstract final class AppFeedback {
       content: ClipRRect(
         borderRadius: BorderRadius.circular(AppRadius.control),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: AppBlur.modal, sigmaY: AppBlur.modal),
+          filter: ImageFilter.blur(
+            sigmaX: AppBlur.modal,
+            sigmaY: AppBlur.modal,
+          ),
           child: Container(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
@@ -117,8 +120,9 @@ abstract final class AppFeedback {
                 Expanded(
                   child: Text(
                     message,
-                    style: Theme.of(context).textTheme.bodyMedium
-                        ?.copyWith(color: palette.textPrimary),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: palette.textPrimary,
+                    ),
                   ),
                 ),
                 if (action != null) ...[
@@ -127,8 +131,9 @@ abstract final class AppFeedback {
                     onPressed: action.onPressed,
                     child: Text(
                       action.label,
-                      style: Theme.of(context).textTheme.labelMedium
-                          ?.copyWith(color: palette.signalAccent),
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: palette.signalAccent,
+                      ),
                     ),
                   ),
                 ],
@@ -175,8 +180,9 @@ class _GlassDialog extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm + 2),
               Text(
                 body,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(color: context.glass.textMuted),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: context.glass.textMuted,
+                ),
               ),
               const SizedBox(height: AppSpacing.lg),
               Row(
@@ -239,8 +245,9 @@ class InlineErrorState extends StatelessWidget {
           const SizedBox(height: AppSpacing.sm),
           Text(
             body,
-            style: Theme.of(context).textTheme.bodyMedium
-                ?.copyWith(color: palette.textMuted),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: palette.textMuted),
           ),
           if (actionLabel != null && onAction != null) ...[
             const SizedBox(height: AppSpacing.lg),

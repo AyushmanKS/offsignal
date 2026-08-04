@@ -265,12 +265,20 @@ final class BroadcastController extends Notifier<BroadcastState> {
   @override
   BroadcastState build() {
     ref.onDispose(_disposeTimers);
-    return BroadcastState(cycleInterval: ref.read(settingsProvider).cycleInterval);
+    return BroadcastState(
+      cycleInterval: ref.read(settingsProvider).cycleInterval,
+    );
+  }
+
+  void halt() {
+    _disposeTimers();
+    _stopwatch.stop();
   }
 
   void start() {
     final transfer = ref.read(outgoingTransferProvider);
-    if (transfer == null || state.isRunning) return;
+    if (transfer == null) return;
+    _disposeTimers();
 
     _stopwatch
       ..reset()

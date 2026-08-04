@@ -124,9 +124,9 @@ class SettingsScreen extends ConsumerWidget {
                   padding: const EdgeInsets.only(top: AppSpacing.sm),
                   child: Text(
                     strings.settingsVersion(ref.watch(appVersionProvider)),
-                    style: AppTextStyles.readout(context).copyWith(
-                      color: palette.textMuted,
-                    ),
+                    style: AppTextStyles.readout(
+                      context,
+                    ).copyWith(color: palette.textMuted),
                   ),
                 ),
               ],
@@ -166,11 +166,7 @@ class _SettingsSection extends StatelessWidget {
 }
 
 class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({
-    required this.label,
-    required this.child,
-    this.trailing,
-  });
+  const _SettingsRow({required this.label, required this.child, this.trailing});
 
   final String label;
   final Widget child;

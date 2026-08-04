@@ -125,7 +125,10 @@ class _TopBar extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          if (trailing != null) trailing! else const SizedBox(width: AppSpacing.sm),
+          if (trailing != null)
+            trailing!
+          else
+            const SizedBox(width: AppSpacing.sm),
         ],
       ),
     );

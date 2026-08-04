@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  FLUTTER_VERSION: 3.44.7
+
+jobs:
+  verify:
+    name: Analyze, guards, and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Verify formatting
+        run: dart format --output=none --set-exit-if-changed packages
+
+      - name: Comment guard (PRD section 4.1)
+        run: |
+          dart run packages/offsignal_tools/bin/check_comments.dart \
+            packages/offsignal_core/lib \
+            packages/offsignal_core/test \
+            packages/offsignal_app/lib
+
+      - name: Core codec tests
+        working-directory: packages/offsignal_core
+        run: dart test
+
+      - name: Tooling tests
+        working-directory: packages/offsignal_tools
+        run: dart test
+
+      - name: App tests, goldens, and asset guard
+        working-directory: packages/offsignal_app
+        run: flutter test
+
+  build:
+    name: Build ${{ matrix.target }}
+    needs: verify
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: apk
+            os: ubuntu-latest
+            command: flutter build apk --release
+          - target: appbundle
+            os: ubuntu-latest
+            command: flutter build appbundle --release
+          - target: web
+            os: ubuntu-latest
+            command: flutter build web --release
+          - target: ipa
+            os: macos-latest
+            command: flutter build ios --release --no-codesign
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: packages/offsignal_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        if: matrix.target == 'apk' || matrix.target == 'appbundle'
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+      - run: ${{ matrix.command }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: offsignal-${{ matrix.target }}
+          path: |
+            packages/offsignal_app/build/app/outputs/flutter-apk/*.apk
+            packages/offsignal_app/build/app/outputs/bundle/release/*.aab
+            packages/offsignal_app/build/web
+            packages/offsignal_app/build/ios/iphoneos/*.app
+          if-no-files-found: ignore

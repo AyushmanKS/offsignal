@@ -130,7 +130,9 @@ final class LTEncoder {
 }
 
 Result<LTPacket> parsePacket(Uint8List bytes) {
-  if (bytes.length < _packetHeaderBytes) return const Failure(MalformedPacket());
+  if (bytes.length < _packetHeaderBytes) {
+    return const Failure(MalformedPacket());
+  }
 
   final view = ByteData.sublistView(bytes);
   final packetId = view.getUint32(0);
@@ -227,7 +229,8 @@ final class LTDecoder {
 
   bool get isComplete => _blockCount != null && _solved.length == _blockCount;
 
-  double get progress => _blockCount == null ? 0 : _solved.length / _blockCount!;
+  double get progress =>
+      _blockCount == null ? 0 : _solved.length / _blockCount!;
 
   void reset() {
     _solved.clear();

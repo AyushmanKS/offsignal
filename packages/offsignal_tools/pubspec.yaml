@@ -1,0 +1,12 @@
+name: offsignal_tools
+description: Repository guards and checks that run in CI.
+publish_to: none
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ^3.12.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.15

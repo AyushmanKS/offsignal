@@ -2,8 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 abstract final class AppInfo {
-  static const privacyPolicyUrl = 'https://offsignal.app/privacy';
-  static const sourceUrl = 'https://github.com/offsignal/offsignal';
+  static const privacyPolicyUrl = String.fromEnvironment(
+    'PRIVACY_POLICY_URL',
+    defaultValue: 'https://offsignal.app/privacy.html',
+  );
+
+  static const sourceUrl = String.fromEnvironment(
+    'SOURCE_URL',
+    defaultValue: 'https://github.com/offsignal/offsignal',
+  );
 }
 
 final appVersionProvider = Provider<String>(

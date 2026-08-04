@@ -48,9 +48,7 @@ class StatRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        for (final stat in stats) Flexible(child: stat),
-      ],
+      children: [for (final stat in stats) Flexible(child: stat)],
     );
   }
 }

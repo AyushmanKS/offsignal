@@ -27,13 +27,17 @@ class BroadcastingScreen extends ConsumerStatefulWidget {
 
 class _BroadcastingScreenState extends ConsumerState<BroadcastingScreen>
     with WidgetsBindingObserver {
+  BroadcastController? _broadcast;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      ref.read(broadcastProvider.notifier).start();
+      final broadcast = ref.read(broadcastProvider.notifier);
+      _broadcast = broadcast;
+      broadcast.start();
       ScreenControl.instance.beginBroadcastMode();
     });
   }
@@ -41,6 +45,7 @@ class _BroadcastingScreenState extends ConsumerState<BroadcastingScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _broadcast?.halt();
     ScreenControl.instance.endBroadcastMode();
     super.dispose();
   }
@@ -99,7 +104,10 @@ class _BroadcastingScreenState extends ConsumerState<BroadcastingScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _QrStage(frame: broadcast.frame, pulseCount: broadcast.packetsSent),
+              _QrStage(
+                frame: broadcast.frame,
+                pulseCount: broadcast.packetsSent,
+              ),
               const SizedBox(height: AppSpacing.md),
               Text(
                 strings.broadcastingHint,

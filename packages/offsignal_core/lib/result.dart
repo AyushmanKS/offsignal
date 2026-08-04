@@ -55,11 +55,13 @@ sealed class Result<T> {
     Failure<T>(:final error) => error,
   };
 
-  R fold<R>(R Function(T value) onSuccess, R Function(CodecError error) onFailure) =>
-      switch (this) {
-        Success<T>(:final value) => onSuccess(value),
-        Failure<T>(:final error) => onFailure(error),
-      };
+  R fold<R>(
+    R Function(T value) onSuccess,
+    R Function(CodecError error) onFailure,
+  ) => switch (this) {
+    Success<T>(:final value) => onSuccess(value),
+    Failure<T>(:final error) => onFailure(error),
+  };
 }
 
 final class Success<T> extends Result<T> {

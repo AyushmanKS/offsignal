@@ -16,7 +16,9 @@ Result<Uint8List> decodeFrame(String frameText) {
     return const Failure(MalformedPacket());
   }
   try {
-    return Success(base64.decode(frameText.substring(frameProtocolPrefix.length)));
+    return Success(
+      base64.decode(frameText.substring(frameProtocolPrefix.length)),
+    );
   } on FormatException {
     return const Failure(MalformedPacket());
   }
@@ -40,7 +42,10 @@ final class OutgoingTransfer {
   }) => packPayload(envelope).fold(
     (compressed) => planTransfer(compressed.length).fold(
       (plan) => Success(
-        OutgoingTransfer._(plan, LTEncoder.fromPlan(compressed, plan, seed: seed)),
+        OutgoingTransfer._(
+          plan,
+          LTEncoder.fromPlan(compressed, plan, seed: seed),
+        ),
       ),
       (error) => Failure(error),
     ),
@@ -74,16 +79,17 @@ final class IncomingTransfer {
 
   void reset() => _decoder.reset();
 
-  PacketIngestResult ingestFrame(String frameText) => decodeFrame(frameText).fold(
-    _decoder.ingest,
-    (error) => PacketIngestResult(
-      accepted: false,
-      isDuplicate: false,
-      solvedBlocks: _decoder.solvedBlocks,
-      blockCount: _decoder.blockCount,
-      error: error,
-    ),
-  );
+  PacketIngestResult ingestFrame(String frameText) =>
+      decodeFrame(frameText).fold(
+        _decoder.ingest,
+        (error) => PacketIngestResult(
+          accepted: false,
+          isDuplicate: false,
+          solvedBlocks: _decoder.solvedBlocks,
+          blockCount: _decoder.blockCount,
+          error: error,
+        ),
+      );
 
   Result<Uint8List> assembleCompressed() => _decoder.assemble();
 

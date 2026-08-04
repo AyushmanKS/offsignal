@@ -30,10 +30,27 @@ abstract final class AppIcons {
   static const flashOff = '$_base/flash-off.svg';
 
   static const all = <String>[
-    send, receive, camera, file, textNote, copy, share, downloadSave,
-    settings, checkmarkSuccess, alertError, chevronBack, close,
-    uploadPicker, stopBroadcast, playBroadcast, radioOff, lightWave,
-    scanCornerBracket, flashOn, flashOff,
+    send,
+    receive,
+    camera,
+    file,
+    textNote,
+    copy,
+    share,
+    downloadSave,
+    settings,
+    checkmarkSuccess,
+    alertError,
+    chevronBack,
+    close,
+    uploadPicker,
+    stopBroadcast,
+    playBroadcast,
+    radioOff,
+    lightWave,
+    scanCornerBracket,
+    flashOn,
+    flashOff,
   ];
 }
 
@@ -42,12 +59,16 @@ abstract final class AppImages {
 
   static const onboardingLightConcept = '$_base/onboarding_light_concept.webp';
   static const onboardingPermissions = '$_base/onboarding_permissions.webp';
-  static const onboardingAddToHomeIos = '$_base/onboarding_add_to_home_ios.webp';
-  static const onboardingAddToHomeAndroid = '$_base/onboarding_add_to_home_android.webp';
+  static const onboardingAddToHomeIos =
+      '$_base/onboarding_add_to_home_ios.webp';
+  static const onboardingAddToHomeAndroid =
+      '$_base/onboarding_add_to_home_android.webp';
 
   static const all = <String>[
-    onboardingLightConcept, onboardingPermissions,
-    onboardingAddToHomeIos, onboardingAddToHomeAndroid,
+    onboardingLightConcept,
+    onboardingPermissions,
+    onboardingAddToHomeIos,
+    onboardingAddToHomeAndroid,
   ];
 }
 

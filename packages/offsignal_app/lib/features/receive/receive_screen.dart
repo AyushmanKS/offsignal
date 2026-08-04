@@ -61,7 +61,9 @@ class _ReceiveScreenState extends ConsumerState<ReceiveScreen>
   }
 
   Future<void> _requestAndStart() async {
-    final access = await ref.read(receiveProvider.notifier).requestCameraAccess();
+    final access = await ref
+        .read(receiveProvider.notifier)
+        .requestCameraAccess();
     if (!mounted || access != CameraAccess.granted) return;
     await _startScanning();
   }
@@ -135,7 +137,10 @@ class _ReceiveScreenState extends ConsumerState<ReceiveScreen>
     final palette = context.glass;
     final receive = ref.watch(receiveProvider);
 
-    ref.listen(receiveProvider.select((state) => state.phase), (previous, next) {
+    ref.listen(receiveProvider.select((state) => state.phase), (
+      previous,
+      next,
+    ) {
       if (next == ReceivePhase.delivered) _onDelivered();
     });
 

@@ -247,7 +247,7 @@ abstract class AppLocalizations {
   /// No description provided for @composeEstimateBlocks.
   ///
   /// In en, this message translates to:
-  /// **'{count} blocks'**
+  /// **'{count, plural, =1{1 block} other{{count} blocks}}'**
   String composeEstimateBlocks(int count);
 
   /// No description provided for @composeEstimateBand.

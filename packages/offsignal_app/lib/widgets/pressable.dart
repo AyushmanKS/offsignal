@@ -64,7 +64,9 @@ class _PressableState extends State<Pressable> {
             ),
             curve: AppMotion.pressCurve,
             child: AnimatedOpacity(
-              opacity: _isEnabled ? (pressed ? widget.pressedOpacity : 1) : 0.45,
+              opacity: _isEnabled
+                  ? (pressed ? widget.pressedOpacity : 1)
+                  : 0.45,
               duration: AppMotion.resolve(context, AppMotion.pressUp),
               child: widget.child,
             ),

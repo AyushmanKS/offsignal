@@ -40,7 +40,9 @@ class GlassButton extends StatelessWidget {
       GlassButtonVariant.danger => palette.danger,
     };
     final isFilled = variant == GlassButtonVariant.primary;
-    final foreground = isFilled
+    final foreground = !_isEnabled
+        ? palette.textMuted
+        : isFilled
         ? (palette.isDark ? palette.backgroundBase : Colors.white)
         : tone;
 
@@ -54,12 +56,19 @@ class GlassButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppRadius.control),
-          color: isFilled
-              ? tone.withValues(alpha: _isEnabled ? 1 : 0.4)
+          color: !_isEnabled
+              ? palette.surfaceFillStrong
+              : isFilled
+              ? tone
               : tone.withValues(alpha: 0.10),
-          border: isFilled
+          border: isFilled && _isEnabled
               ? null
-              : Border.all(color: tone.withValues(alpha: 0.35), width: 1),
+              : Border.all(
+                  color: _isEnabled
+                      ? tone.withValues(alpha: 0.35)
+                      : palette.borderHighlight,
+                  width: 1,
+                ),
           boxShadow: isFilled && _isEnabled
               ? [
                   BoxShadow(
