@@ -1,11 +1,11 @@
 {
-    "name": "offsignal",
-    "short_name": "offsignal",
+    "name": "OffSignal",
+    "short_name": "OffSignal",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0A0E14",
+    "theme_color": "#4FD8FF",
+    "description": "Move a note, link, or small file between phones using only light. No WiFi, no Bluetooth, no account.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

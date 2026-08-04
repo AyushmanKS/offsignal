@@ -22,6 +22,15 @@ Result<Uint8List> decodeFrame(String frameText) {
   }
 }
 
+Result<TransferPlan> estimateTransfer(PayloadEnvelope envelope) =>
+    packPayload(envelope).fold(
+      (compressed) => planTransfer(compressed.length),
+      (error) => Failure(error),
+    );
+
+Result<PayloadEnvelope> verifyAssembledPayload(Uint8List compressed) =>
+    unpackPayload(compressed);
+
 final class OutgoingTransfer {
   OutgoingTransfer._(this.plan, this._encoder);
 
@@ -75,6 +84,8 @@ final class IncomingTransfer {
       error: error,
     ),
   );
+
+  Result<Uint8List> assembleCompressed() => _decoder.assemble();
 
   Result<PayloadEnvelope> finish() =>
       _decoder.assemble().fold(unpackPayload, (error) => Failure(error));

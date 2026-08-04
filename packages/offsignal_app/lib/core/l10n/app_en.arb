@@ -1,0 +1,151 @@
+{
+  "@@locale": "en",
+
+  "appName": "OffSignal",
+  "appTagline": "Move a note, link, or small file between phones using only light.",
+
+  "actionCancel": "Cancel",
+  "actionStop": "Stop",
+  "actionRetry": "Retry",
+  "actionOpenSettings": "Open Settings",
+  "actionDismiss": "Dismiss",
+  "actionBack": "Back",
+  "actionClose": "Close",
+  "actionNext": "Next",
+  "actionSkip": "Skip",
+
+  "homeSendTitle": "Send",
+  "homeSendDescription": "Show a stream of codes for another phone to read.",
+  "homeReceiveTitle": "Receive",
+  "homeReceiveDescription": "Point your camera at the other phone's screen.",
+  "homeSettingsLabel": "Settings",
+
+  "composeTitle": "Send",
+  "composeSegmentText": "Text",
+  "composeSegmentFile": "File",
+  "composeTextHint": "Type a message or paste a link",
+  "composeTextFieldLabel": "Message to send",
+  "composeCharacterCount": "{count, plural, =1{1 character} other{{count} characters}}",
+  "@composeCharacterCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "composeChooseFile": "Choose a file",
+  "composeChooseFileHint": "An image, PDF, or small document",
+  "composeRemoveFile": "Remove file",
+  "composeEstimateBlocks": "{count} blocks",
+  "@composeEstimateBlocks": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "composeEstimateBand": "~{from}–{to}s",
+  "@composeEstimateBand": {
+    "placeholders": { "from": { "type": "int" }, "to": { "type": "int" } }
+  },
+  "composeStart": "Start broadcasting",
+  "composeDisabledHelp": "Type a message or choose a file",
+  "composeSwitchToTextTitle": "Switch to text?",
+  "composeSwitchToFileTitle": "Switch to a file?",
+  "composeSwitchBody": "The content you already added will be cleared.",
+  "composeSwitchConfirm": "Switch",
+  "composeLargePayloadWarning": "OffSignal is best for notes, links, and small files. This one may take a while.",
+
+  "broadcastingTitle": "Broadcasting",
+  "broadcastingHint": "Point the other phone's camera at this screen.",
+  "broadcastingStatBlocks": "Blocks",
+  "broadcastingStatFramesSent": "Frames sent",
+  "broadcastingStatElapsed": "Elapsed",
+  "broadcastingSpeedLabel": "Cycle speed",
+  "broadcastingSpeedValue": "{milliseconds} ms",
+  "@broadcastingSpeedValue": {
+    "placeholders": { "milliseconds": { "type": "int" } }
+  },
+  "broadcastingSpeedHelp": "Slow this down if the other phone isn't picking frames up.",
+  "broadcastingPausedTitle": "Paused",
+  "broadcastingPausedBody": "Broadcasting stopped while OffSignal was in the background.",
+  "broadcastingResume": "Resume",
+  "broadcastingLeaveTitle": "Stop broadcasting?",
+  "broadcastingLeaveBody": "The other device hasn't finished receiving.",
+
+  "receiveTitle": "Receive",
+  "receivePermissionTitle": "OffSignal needs your camera",
+  "receivePermissionBody": "OffSignal uses your camera to read the light signal from another device. Nothing is recorded or uploaded.",
+  "receiveAllowCamera": "Allow camera",
+  "receivePermissionDeniedTitle": "Camera access is off",
+  "receivePermissionDeniedBody": "Turn on camera access for OffSignal in your device settings, then come back.",
+  "receiveStartListening": "Start listening",
+  "receiveScanningHint": "Point at the other phone's screen",
+  "receiveWaiting": "Looking for a signal…",
+  "receiveVerifying": "Verifying…",
+  "receiveVerifyRetry": "That didn't verify yet. Hold both phones steady — still listening.",
+  "receiveStatBlocks": "{solved} / {total} blocks",
+  "@receiveStatBlocks": {
+    "placeholders": { "solved": { "type": "int" }, "total": { "type": "int" } }
+  },
+  "receiveStatFramesRead": "{count} frames read",
+  "@receiveStatFramesRead": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "receiveTorchOn": "Turn the flash on",
+  "receiveTorchOff": "Turn the flash off",
+  "receiveLeaveTitle": "Stop listening?",
+  "receiveLeaveBody": "This transfer isn't finished yet.",
+
+  "resultTitle": "Received",
+  "resultMessageLabel": "Message",
+  "resultCopy": "Copy",
+  "resultCopied": "Copied to clipboard",
+  "resultSave": "Save",
+  "resultShare": "Share",
+  "resultSaved": "Saved to your files",
+  "resultAnother": "Send or receive another",
+
+  "onboardingLightTitle": "Light, not radio",
+  "onboardingLightBody": "One phone shows a fast stream of codes. The other reads them with its camera. No WiFi, no Bluetooth, no account, no internet.",
+  "onboardingPermissionsTitle": "Camera only",
+  "onboardingPermissionsBody": "Receiving needs camera access. Nothing is recorded, stored, or uploaded — what you send never leaves the two phones.",
+  "onboardingInstallTitle": "Add OffSignal to your home screen",
+  "onboardingInstallIosBody": "Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it's installed.",
+  "onboardingInstallAndroidBody": "Tap the menu in Chrome, then choose Install app. OffSignal keeps working with no signal once it's installed.",
+  "onboardingGetStarted": "Get started",
+
+  "settingsTitle": "Settings",
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "settingsThemeSystem": "System",
+  "settingsThemeLight": "Light",
+  "settingsThemeDark": "Dark",
+  "settingsTransfer": "Transfer",
+  "settingsDefaultSpeed": "Default cycle speed",
+  "settingsHaptics": "Haptics",
+  "settingsHapticsDescription": "Vibrate on success and key actions.",
+  "settingsAbout": "About",
+  "settingsReplayOnboarding": "Replay the intro",
+  "settingsPrivacy": "Privacy policy",
+  "settingsSource": "Source code",
+  "settingsVersion": "Version {version}",
+  "@settingsVersion": {
+    "placeholders": { "version": { "type": "String" } }
+  },
+
+  "errorCameraPermissionDenied": "Camera access is off. Turn it on in Settings, then try again.",
+  "errorCameraUnavailable": "The camera couldn't start. Check another app isn't using it, then try again.",
+  "errorTransferCorrupted": "That transfer didn't come through cleanly. Ask the other phone to start again.",
+  "errorPayloadTooLarge": "That file is too large to send over light. Try something smaller.",
+  "errorPayloadEmpty": "Add a message or choose a file to send.",
+  "errorFileUnreadable": "That file couldn't be read. Try choosing it again.",
+  "errorSaveFailed": "Couldn't save the file. Try again, or use Share instead.",
+  "errorShareFailed": "Couldn't open the share sheet. Try again.",
+  "errorUnknown": "Something went wrong. Try again.",
+
+  "unitBytes": "{count} B",
+  "@unitBytes": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "unitKilobytes": "{count} KB",
+  "@unitKilobytes": {
+    "placeholders": { "count": { "type": "String" } }
+  },
+  "unitMegabytes": "{count} MB",
+  "@unitMegabytes": {
+    "placeholders": { "count": { "type": "String" } }
+  }
+}

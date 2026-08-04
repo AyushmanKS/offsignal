@@ -106,9 +106,11 @@ def phone(draw, box, outline, stroke=3, radius=14, screen_fill=None):
     )
 
 
-def write(image, path, width, height):
+def write(image, path, width, height, opaque=False):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     out = finish(image, width, height)
+    if opaque:
+        out = out.convert("RGB")
     if path.endswith(".webp"):
         out.save(path, "WEBP", lossless=True, quality=100, method=6)
     else:
@@ -126,7 +128,7 @@ def app_icon_master():
     signal_mark(draw, (size / 2, size / 2), size * 0.60, CYAN, CYAN, size * 0.030)
     base.alpha_composite(finish(layer, size, size))
 
-    write(base.convert("RGB").convert("RGBA"), os.path.join(ICON, "app_icon_master.png"), size, size)
+    write(base, os.path.join(ICON, "app_icon_master.png"), size, size, opaque=True)
 
 
 def adaptive_foreground():
