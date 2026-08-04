@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "OffSignal",
+      "request": "launch",
+      "type": "dart",
+      "program": "packages/offsignal_app/lib/main.dart",
+      "cwd": "packages/offsignal_app"
+    },
+    {
+      "name": "OffSignal (web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "packages/offsignal_app/lib/main.dart",
+      "cwd": "packages/offsignal_app",
+      "deviceId": "chrome"
+    },
+    {
+      "name": "OffSignal (profile)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile",
+      "program": "packages/offsignal_app/lib/main.dart",
+      "cwd": "packages/offsignal_app"
+    },
+    {
+      "name": "OffSignal (release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "program": "packages/offsignal_app/lib/main.dart",
+      "cwd": "packages/offsignal_app"
+    }
+  ]
+}

@@ -10,6 +10,29 @@ any sufficient subset it manages to scan.
 
 Implements [docs/prd1.md](docs/prd1.md).
 
+## Quick start
+
+This repo is a pub workspace, so the Flutter app lives in `packages/offsignal_app`, not at the root.
+Running `flutter run` from the root fails with `Target file "lib/main.dart" not found` — use the
+Makefile instead, which drives everything from the root:
+
+```bash
+make setup     # resolve dependencies for the whole workspace
+make run       # run the app  (make run DEVICE=chrome to pick a device)
+make test      # every suite: codec, tooling, app
+make verify    # everything CI runs
+make help      # all targets
+```
+
+Or work in the app package directly:
+
+```bash
+cd packages/offsignal_app && flutter run
+```
+
+In VS Code, press F5 — the launch configs in `.vscode/launch.json` already point at the right entry
+point and working directory.
+
 ## Layout
 
 ```
