@@ -19,6 +19,10 @@ final class ReceiveState {
     this.blockCount = 0,
     this.framesRead = 0,
     this.framesAccepted = 0,
+    this.packetsNeeded = 0,
+    this.estimatedProgress = 0,
+    this.scanRatePerSecond = 0,
+    this.secondsRemaining,
     this.pulseCount = 0,
     this.torchOn = false,
     this.error,
@@ -30,6 +34,10 @@ final class ReceiveState {
   final int blockCount;
   final int framesRead;
   final int framesAccepted;
+  final int packetsNeeded;
+  final double estimatedProgress;
+  final double scanRatePerSecond;
+  final int? secondsRemaining;
   final int pulseCount;
   final bool torchOn;
   final AppException? error;
@@ -43,6 +51,8 @@ final class ReceiveState {
 
   double get progress => blockCount == 0 ? 0 : solvedBlocks / blockCount;
 
+  bool get isStalled => hasSignal && scanRatePerSecond < 0.4;
+
   ReceiveState copyWith({
     ReceivePhase? phase,
     CameraAccess? access,
@@ -50,6 +60,11 @@ final class ReceiveState {
     int? blockCount,
     int? framesRead,
     int? framesAccepted,
+    int? packetsNeeded,
+    double? estimatedProgress,
+    double? scanRatePerSecond,
+    int? secondsRemaining,
+    bool clearRemaining = false,
     int? pulseCount,
     bool? torchOn,
     AppException? error,
@@ -61,6 +76,12 @@ final class ReceiveState {
     blockCount: blockCount ?? this.blockCount,
     framesRead: framesRead ?? this.framesRead,
     framesAccepted: framesAccepted ?? this.framesAccepted,
+    packetsNeeded: packetsNeeded ?? this.packetsNeeded,
+    estimatedProgress: estimatedProgress ?? this.estimatedProgress,
+    scanRatePerSecond: scanRatePerSecond ?? this.scanRatePerSecond,
+    secondsRemaining: clearRemaining
+        ? null
+        : (secondsRemaining ?? this.secondsRemaining),
     pulseCount: pulseCount ?? this.pulseCount,
     torchOn: torchOn ?? this.torchOn,
     error: clearError ? null : (error ?? this.error),
@@ -77,6 +98,8 @@ final class ReceiveController extends Notifier<ReceiveState> {
   IncomingTransfer _transfer = IncomingTransfer();
   bool _isDisposed = false;
   bool _isVerifying = false;
+  final Stopwatch _sinceStart = Stopwatch();
+  DateTime? _firstAcceptedAt;
 
   @override
   ReceiveState build() {
@@ -140,18 +163,27 @@ final class ReceiveController extends Notifier<ReceiveState> {
   void startScanning() {
     _transfer = IncomingTransfer();
     _isVerifying = false;
+    _firstAcceptedAt = null;
+    _sinceStart
+      ..reset()
+      ..start();
     state = state.copyWith(
       phase: ReceivePhase.scanning,
       solvedBlocks: 0,
       blockCount: 0,
       framesRead: 0,
       framesAccepted: 0,
+      packetsNeeded: 0,
+      estimatedProgress: 0,
+      scanRatePerSecond: 0,
+      clearRemaining: true,
       clearError: true,
     );
   }
 
   void stopScanning() {
     _isVerifying = false;
+    _sinceStart.stop();
     state = state.copyWith(phase: ReceivePhase.idle, torchOn: false);
   }
 
@@ -169,15 +201,41 @@ final class ReceiveController extends Notifier<ReceiveState> {
     final result = _transfer.ingestFrame(frameText);
     if (result.error is MalformedPacket) return;
 
+    if (result.accepted) _firstAcceptedAt ??= DateTime.now();
+
+    final accepted = _transfer.framesAccepted;
+    final needed = _transfer.distinctPacketsNeeded;
+    final rate = _acceptedPerSecond(accepted);
+
     state = state.copyWith(
       solvedBlocks: _transfer.solvedBlocks,
       blockCount: _transfer.blockCount,
       framesRead: _transfer.framesRead,
-      framesAccepted: _transfer.framesAccepted,
+      framesAccepted: accepted,
+      packetsNeeded: needed,
+      estimatedProgress: _transfer.estimatedProgress,
+      scanRatePerSecond: rate,
+      secondsRemaining: _secondsRemaining(accepted, needed, rate),
+      clearRemaining: rate <= 0,
       pulseCount: result.accepted ? state.pulseCount + 1 : state.pulseCount,
     );
 
     if (result.isComplete) await _verify();
+  }
+
+  double _acceptedPerSecond(int accepted) {
+    final startedAt = _firstAcceptedAt;
+    if (startedAt == null || accepted < 2) return 0;
+    final elapsed = DateTime.now().difference(startedAt).inMilliseconds;
+    if (elapsed < 1500) return 0;
+    return (accepted - 1) * 1000 / elapsed;
+  }
+
+  int? _secondsRemaining(int accepted, int needed, double rate) {
+    if (rate <= 0 || needed <= 0) return null;
+    final outstanding = needed - accepted;
+    if (outstanding <= 0) return 0;
+    return (outstanding / rate).ceil();
   }
 
   Future<void> _verify() async {

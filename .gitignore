@@ -61,3 +61,6 @@ build/
 **/android/key.properties
 *.jks
 *.keystore
+
+# Build artifacts collected by `make apk`
+dist/

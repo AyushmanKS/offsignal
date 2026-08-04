@@ -85,9 +85,18 @@ verify: analyze format comments test
 
 apk:
 	cd $(APP) && flutter build apk --release
+	@mkdir -p dist
+	@cp $(APP)/build/app/outputs/flutter-apk/app-release.apk dist/offsignal-release.apk
+	@echo ""
+	@echo "APK: $(CURDIR)/dist/offsignal-release.apk"
+	@echo "     $$(du -h dist/offsignal-release.apk | cut -f1)"
+	@echo "Signed with: $$(./tools/apk_signer.sh dist/offsignal-release.apk)"
+	@echo "Permissions: $$(./tools/apk_permissions.sh dist/offsignal-release.apk)"
 
 web:
 	cd $(APP) && flutter build web --release
+	@echo ""
+	@echo "Web bundle: $(CURDIR)/$(APP)/build/web"
 
 l10n:
 	cd $(APP) && flutter gen-l10n

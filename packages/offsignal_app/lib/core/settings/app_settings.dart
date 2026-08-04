@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 const _themeModeKey = 'settings.themeMode';
 const _cycleIntervalKey = 'settings.cycleIntervalMs';
+const _densityKey = 'settings.qrDensity';
 const _hapticsKey = 'settings.haptics';
 const _onboardingSeenKey = 'settings.onboardingSeen';
 
@@ -13,6 +14,7 @@ final class AppSettings {
   const AppSettings({
     required this.themeMode,
     required this.cycleInterval,
+    required this.density,
     required this.hapticsEnabled,
     required this.onboardingSeen,
   });
@@ -20,22 +22,26 @@ final class AppSettings {
   const AppSettings.defaults()
     : themeMode = ThemeMode.system,
       cycleInterval = defaultCycleInterval,
+      density = defaultDensity,
       hapticsEnabled = true,
       onboardingSeen = false;
 
   final ThemeMode themeMode;
   final Duration cycleInterval;
+  final QrDensity density;
   final bool hapticsEnabled;
   final bool onboardingSeen;
 
   AppSettings copyWith({
     ThemeMode? themeMode,
     Duration? cycleInterval,
+    QrDensity? density,
     bool? hapticsEnabled,
     bool? onboardingSeen,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     cycleInterval: cycleInterval ?? this.cycleInterval,
+    density: density ?? this.density,
     hapticsEnabled: hapticsEnabled ?? this.hapticsEnabled,
     onboardingSeen: onboardingSeen ?? this.onboardingSeen,
   );
@@ -57,6 +63,7 @@ final class SettingsController extends Notifier<AppSettings> {
     return AppSettings(
       themeMode: _readThemeMode(preferences),
       cycleInterval: _readCycleInterval(preferences),
+      density: QrDensity.fromName(preferences.getString(_densityKey)),
       hapticsEnabled: preferences.getBool(_hapticsKey) ?? true,
       onboardingSeen: preferences.getBool(_onboardingSeenKey) ?? false,
     );
@@ -78,6 +85,11 @@ final class SettingsController extends Notifier<AppSettings> {
     );
     state = state.copyWith(cycleInterval: clamped);
     await _preferences.setInt(_cycleIntervalKey, clamped.inMilliseconds);
+  }
+
+  Future<void> setDensity(QrDensity density) async {
+    state = state.copyWith(density: density);
+    await _preferences.setString(_densityKey, density.name);
   }
 
   Future<void> setHapticsEnabled(bool enabled) async {

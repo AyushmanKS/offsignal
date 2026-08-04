@@ -448,6 +448,48 @@ abstract class AppLocalizations {
   /// **'{solved} / {total} blocks'**
   String receiveStatBlocks(int solved, int total);
 
+  /// No description provided for @receivePacketsCaptured.
+  ///
+  /// In en, this message translates to:
+  /// **'{captured} of about {needed} packets'**
+  String receivePacketsCaptured(int captured, int needed);
+
+  /// No description provided for @receiveRemainingSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'about {seconds}s left'**
+  String receiveRemainingSeconds(int seconds);
+
+  /// No description provided for @receiveRemainingMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'about {minutes} min left'**
+  String receiveRemainingMinutes(int minutes);
+
+  /// No description provided for @receiveEstimating.
+  ///
+  /// In en, this message translates to:
+  /// **'estimating…'**
+  String get receiveEstimating;
+
+  /// No description provided for @receiveHoldSteady.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep both phones steady — do not stop yet.'**
+  String get receiveHoldSteady;
+
+  /// No description provided for @receiveStalledHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Barely reading anything. Move closer, hold steadier, or lower QR density on the sending phone in Settings.'**
+  String get receiveStalledHint;
+
+  /// No description provided for @receiveAlmostThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there — keep holding.'**
+  String get receiveAlmostThere;
+
   /// No description provided for @receiveStatFramesRead.
   ///
   /// In en, this message translates to:
@@ -627,6 +669,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Default cycle speed'**
   String get settingsDefaultSpeed;
+
+  /// No description provided for @settingsDensity.
+  ///
+  /// In en, this message translates to:
+  /// **'QR density'**
+  String get settingsDensity;
+
+  /// No description provided for @settingsDensityDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Denser codes carry more data per frame, so transfers finish sooner — but they need a steadier, closer camera. Drop down a level if scanning stalls.'**
+  String get settingsDensityDescription;
+
+  /// No description provided for @settingsDensityCompact.
+  ///
+  /// In en, this message translates to:
+  /// **'Compact'**
+  String get settingsDensityCompact;
+
+  /// No description provided for @settingsDensityBalanced.
+  ///
+  /// In en, this message translates to:
+  /// **'Balanced'**
+  String get settingsDensityBalanced;
+
+  /// No description provided for @settingsDensityDense.
+  ///
+  /// In en, this message translates to:
+  /// **'Dense'**
+  String get settingsDensityDense;
+
+  /// No description provided for @settingsDensityDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{bytes} bytes per frame'**
+  String settingsDensityDetail(int bytes);
 
   /// No description provided for @settingsHaptics.
   ///

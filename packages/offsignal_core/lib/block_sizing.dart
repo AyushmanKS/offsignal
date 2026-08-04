@@ -2,8 +2,25 @@ import 'dart:math' as math;
 
 import 'result.dart';
 
-const defaultBlockSizeBytes = 180;
-const maxBlockSizeBytes = 512;
+enum QrDensity {
+  compact(400),
+  balanced(900),
+  dense(1400);
+
+  const QrDensity(this.blockSizeBytes);
+
+  final int blockSizeBytes;
+
+  static QrDensity fromName(String? name) => QrDensity.values.firstWhere(
+    (density) => density.name == name,
+    orElse: () => QrDensity.balanced,
+  );
+}
+
+const defaultDensity = QrDensity.balanced;
+const defaultBlockSizeBytes = 900;
+const minBlockSizeBytes = 180;
+const maxBlockSizeBytes = 1400;
 const maxBlockCount = 0xFFFF;
 const targetBlockCount = 900;
 const maxPacketDegree = 32;
@@ -15,28 +32,30 @@ const slowestCycleInterval = Duration(milliseconds: 400);
 const softPayloadWarningBytes = 2 * 1024 * 1024;
 const maxPayloadBytes = maxBlockCount * maxBlockSizeBytes;
 
-const _packetOverheadRatio = 1.8;
-const _packetOverheadFloor = 8;
-const _optimisticFactor = 0.75;
-const _pessimisticFactor = 1.5;
+const _distinctPacketOverhead = 1.3;
+const _distinctPacketFloor = 4;
+const _optimisticFactor = 0.8;
+const _pessimisticFactor = 3.0;
 
 final class TransferPlan {
   const TransferPlan({
     required this.compressedBytes,
     required this.blockSize,
     required this.blockCount,
-    required this.expectedPacketCount,
+    required this.distinctPacketsNeeded,
   });
 
   final int compressedBytes;
   final int blockSize;
   final int blockCount;
-  final int expectedPacketCount;
+  final int distinctPacketsNeeded;
 
   bool get exceedsSoftWarning => compressedBytes > softPayloadWarningBytes;
 
+  int get expectedPacketCount => distinctPacketsNeeded;
+
   TransferDurationBand durationBand(Duration cycleInterval) {
-    final nominalMs = expectedPacketCount * cycleInterval.inMilliseconds;
+    final nominalMs = distinctPacketsNeeded * 2 * cycleInterval.inMilliseconds;
     return TransferDurationBand(
       fastest: Duration(milliseconds: (nominalMs * _optimisticFactor).round()),
       slowest: Duration(milliseconds: (nominalMs * _pessimisticFactor).round()),
@@ -51,19 +70,22 @@ final class TransferDurationBand {
   final Duration slowest;
 }
 
-Result<TransferPlan> planTransfer(int compressedBytes) {
+Result<TransferPlan> planTransfer(
+  int compressedBytes, {
+  int blockSize = defaultBlockSizeBytes,
+}) {
   if (compressedBytes <= 0) return const Failure(EmptyPayload());
   if (compressedBytes > maxPayloadBytes) {
     return Failure(PayloadTooLarge(compressedBytes, maxPayloadBytes));
   }
 
-  var blockSize = defaultBlockSizeBytes;
-  while (_blockCountFor(compressedBytes, blockSize) > targetBlockCount &&
-      blockSize < maxBlockSizeBytes) {
-    blockSize = math.min(blockSize * 2, maxBlockSizeBytes);
+  var chosenSize = blockSize.clamp(minBlockSizeBytes, maxBlockSizeBytes);
+  while (_blockCountFor(compressedBytes, chosenSize) > targetBlockCount &&
+      chosenSize < maxBlockSizeBytes) {
+    chosenSize = math.min(chosenSize * 2, maxBlockSizeBytes);
   }
 
-  final blockCount = _blockCountFor(compressedBytes, blockSize);
+  final blockCount = _blockCountFor(compressedBytes, chosenSize);
   if (blockCount > maxBlockCount) {
     return Failure(PayloadTooLarge(compressedBytes, maxPayloadBytes));
   }
@@ -71,10 +93,10 @@ Result<TransferPlan> planTransfer(int compressedBytes) {
   return Success(
     TransferPlan(
       compressedBytes: compressedBytes,
-      blockSize: blockSize,
+      blockSize: chosenSize,
       blockCount: blockCount,
-      expectedPacketCount:
-          (blockCount * _packetOverheadRatio).ceil() + _packetOverheadFloor,
+      distinctPacketsNeeded:
+          (blockCount * _distinctPacketOverhead).ceil() + _distinctPacketFloor,
     ),
   );
 }

@@ -80,6 +80,22 @@
   "@receiveStatBlocks": {
     "placeholders": { "solved": { "type": "int" }, "total": { "type": "int" } }
   },
+  "receivePacketsCaptured": "{captured} of about {needed} packets",
+  "@receivePacketsCaptured": {
+    "placeholders": { "captured": { "type": "int" }, "needed": { "type": "int" } }
+  },
+  "receiveRemainingSeconds": "about {seconds}s left",
+  "@receiveRemainingSeconds": {
+    "placeholders": { "seconds": { "type": "int" } }
+  },
+  "receiveRemainingMinutes": "about {minutes} min left",
+  "@receiveRemainingMinutes": {
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "receiveEstimating": "estimating…",
+  "receiveHoldSteady": "Keep both phones steady — do not stop yet.",
+  "receiveStalledHint": "Barely reading anything. Move closer, hold steadier, or lower QR density on the sending phone in Settings.",
+  "receiveAlmostThere": "Almost there — keep holding.",
   "receiveStatFramesRead": "{count} frames read",
   "@receiveStatFramesRead": {
     "placeholders": { "count": { "type": "int" } }
@@ -116,6 +132,15 @@
   "settingsThemeDark": "Dark",
   "settingsTransfer": "Transfer",
   "settingsDefaultSpeed": "Default cycle speed",
+  "settingsDensity": "QR density",
+  "settingsDensityDescription": "Denser codes carry more data per frame, so transfers finish sooner — but they need a steadier, closer camera. Drop down a level if scanning stalls.",
+  "settingsDensityCompact": "Compact",
+  "settingsDensityBalanced": "Balanced",
+  "settingsDensityDense": "Dense",
+  "settingsDensityDetail": "{bytes} bytes per frame",
+  "@settingsDensityDetail": {
+    "placeholders": { "bytes": { "type": "int" } }
+  },
   "settingsHaptics": "Haptics",
   "settingsHapticsDescription": "Vibrate on success and key actions.",
   "settingsAbout": "About",

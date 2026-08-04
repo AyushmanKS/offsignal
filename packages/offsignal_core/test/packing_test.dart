@@ -132,20 +132,59 @@ void main() {
 
   group('block planning', () {
     test('uses the default block size for small payloads', () {
-      final plan = planTransfer(900).valueOrNull!;
+      final plan = planTransfer(4500).valueOrNull!;
       expect(plan.blockSize, defaultBlockSizeBytes);
       expect(plan.blockCount, 5);
     });
 
-    test('grows the block size to hold the block count down', () {
-      final plan = planTransfer(400 * 1024).valueOrNull!;
-      expect(plan.blockSize, greaterThan(defaultBlockSizeBytes));
-      expect(plan.blockSize, lessThanOrEqualTo(maxBlockSizeBytes));
-      expect(plan.blockCount, lessThanOrEqualTo(targetBlockCount));
+    test('honours an explicitly chosen density', () {
+      for (final density in QrDensity.values) {
+        final plan = planTransfer(
+          50 * 1024,
+          blockSize: density.blockSizeBytes,
+        ).valueOrNull!;
+        expect(plan.blockSize, density.blockSizeBytes);
+      }
     });
 
+    test('a denser block size means strictly fewer blocks', () {
+      final compact = planTransfer(
+        100 * 1024,
+        blockSize: QrDensity.compact.blockSizeBytes,
+      ).valueOrNull!;
+      final dense = planTransfer(
+        100 * 1024,
+        blockSize: QrDensity.dense.blockSizeBytes,
+      ).valueOrNull!;
+
+      expect(dense.blockCount, lessThan(compact.blockCount));
+      expect(
+        dense.distinctPacketsNeeded,
+        lessThan(compact.distinctPacketsNeeded),
+      );
+    });
+
+    test(
+      'grows the block size when a small one would mean too many blocks',
+      () {
+        final modest = planTransfer(
+          200 * 1024,
+          blockSize: minBlockSizeBytes,
+        ).valueOrNull!;
+        expect(modest.blockSize, greaterThan(minBlockSizeBytes));
+        expect(modest.blockCount, lessThanOrEqualTo(targetBlockCount));
+
+        final huge = planTransfer(
+          2 * 1024 * 1024,
+          blockSize: minBlockSizeBytes,
+        ).valueOrNull!;
+        expect(huge.blockSize, maxBlockSizeBytes);
+        expect(huge.blockCount, lessThanOrEqualTo(maxBlockCount));
+      },
+    );
+
     test('block count always covers the payload exactly once', () {
-      for (final length in <int>[1, 179, 180, 181, 5000, 100000, 1000000]) {
+      for (final length in <int>[1, 899, 900, 901, 5000, 100000, 1000000]) {
         final plan = planTransfer(length).valueOrNull!;
         expect(plan.blockCount * plan.blockSize, greaterThanOrEqualTo(length));
         expect((plan.blockCount - 1) * plan.blockSize, lessThan(length));

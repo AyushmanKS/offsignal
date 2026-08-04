@@ -34,11 +34,14 @@ final class LTEncoder {
     this.totalLength,
   );
 
-  static Result<LTEncoder> create(Uint8List compressedPayload, {int? seed}) =>
-      planTransfer(compressedPayload.length).fold(
-        (plan) => Success(fromPlan(compressedPayload, plan, seed: seed)),
-        (error) => Failure(error),
-      );
+  static Result<LTEncoder> create(
+    Uint8List compressedPayload, {
+    int? seed,
+    int blockSize = defaultBlockSizeBytes,
+  }) => planTransfer(compressedPayload.length, blockSize: blockSize).fold(
+    (plan) => Success(fromPlan(compressedPayload, plan, seed: seed)),
+    (error) => Failure(error),
+  );
 
   static LTEncoder fromPlan(
     Uint8List compressedPayload,
@@ -74,8 +77,8 @@ final class LTEncoder {
   int get packetsEmitted => _packetId;
 
   Uint8List nextPacket() {
+    final indices = _nextIndices(_packetId);
     _packetId++;
-    final indices = _pickIndices(_sampleDegree());
     final payload = Uint8List(blockSize);
     for (final index in indices) {
       _xorInto(payload, _blocks[index]);
@@ -83,12 +86,48 @@ final class LTEncoder {
     return _serialize(_packetId, indices, payload);
   }
 
+  List<int> _nextIndices(int packetIndex) {
+    final phase = packetIndex % (blockCount * 2);
+    if (phase < blockCount) return <int>[phase];
+    return _pickIndices(_sampleDegree());
+  }
+
   int _sampleDegree() {
     final ceiling = math.min(blockCount, maxPacketDegree);
-    final u = _random.nextDouble();
-    if (u < 1 / blockCount) return 1;
-    final degree = (1 / (1 + 1 / blockCount - u)).ceil();
-    return degree.clamp(1, ceiling);
+    if (blockCount == 1) return 1;
+
+    final spikeWeights = _robustSpikeWeights;
+    final u = _random.nextDouble() * _robustWeightTotal;
+    var accumulated = 0.0;
+    for (var degree = 1; degree <= blockCount; degree++) {
+      accumulated += spikeWeights[degree];
+      if (u <= accumulated) return math.min(degree, ceiling);
+    }
+    return 1;
+  }
+
+  late final List<double> _robustSpikeWeights = _buildRobustWeights();
+  late final double _robustWeightTotal = _robustSpikeWeights.reduce(
+    (a, b) => a + b,
+  );
+
+  List<double> _buildRobustWeights() {
+    const c = 0.03;
+    const delta = 0.05;
+    final spread = c * math.log(blockCount / delta) * math.sqrt(blockCount);
+    final spike = (blockCount / spread).round().clamp(2, blockCount);
+
+    final weights = List<double>.filled(blockCount + 1, 0);
+    for (var degree = 1; degree <= blockCount; degree++) {
+      final ideal = degree == 1 ? 1 / blockCount : 1 / (degree * (degree - 1));
+      final extra = degree < spike
+          ? spread / (blockCount * degree)
+          : (degree == spike
+                ? spread * math.log(spread / delta) / blockCount
+                : 0.0);
+      weights[degree] = ideal + extra;
+    }
+    return weights;
   }
 
   List<int> _pickIndices(int degree) {
@@ -231,6 +270,22 @@ final class LTDecoder {
 
   double get progress =>
       _blockCount == null ? 0 : _solved.length / _blockCount!;
+
+  int get distinctPacketsNeeded {
+    final count = _blockCount;
+    if (count == null) return 0;
+    return (count * 1.3).ceil() + 4;
+  }
+
+  double get estimatedProgress {
+    final count = _blockCount;
+    if (count == null) return 0;
+    if (isComplete) return 1;
+    final needed = distinctPacketsNeeded;
+    final byPackets = needed == 0 ? 0.0 : _framesAccepted / needed;
+    final byBlocks = _solved.length / count;
+    return math.max(byBlocks, math.min(byPackets, 0.99));
+  }
 
   void reset() {
     _solved.clear();

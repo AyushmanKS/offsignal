@@ -90,6 +90,45 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
+                _SettingsRow(
+                  label: strings.settingsDensity,
+                  trailing: Text(
+                    strings.settingsDensityDetail(
+                      settings.density.blockSizeBytes,
+                    ),
+                    style: AppTextStyles.readout(context),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      GlassSegmentedControl<QrDensity>(
+                        selected: settings.density,
+                        onChanged: controller.setDensity,
+                        options: [
+                          SegmentOption(
+                            value: QrDensity.compact,
+                            label: strings.settingsDensityCompact,
+                          ),
+                          SegmentOption(
+                            value: QrDensity.balanced,
+                            label: strings.settingsDensityBalanced,
+                          ),
+                          SegmentOption(
+                            value: QrDensity.dense,
+                            label: strings.settingsDensityDense,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        strings.settingsDensityDescription,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: context.glass.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 _SwitchRow(
                   label: strings.settingsHaptics,
                   description: strings.settingsHapticsDescription,

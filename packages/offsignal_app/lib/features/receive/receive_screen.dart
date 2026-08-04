@@ -72,8 +72,10 @@ class _ReceiveScreenState extends ConsumerState<ReceiveScreen>
     _releaseCamera();
 
     final scanner = MobileScannerController(
-      detectionSpeed: DetectionSpeed.noDuplicates,
+      detectionSpeed: DetectionSpeed.unrestricted,
+      detectionTimeoutMs: 0,
       formats: const [BarcodeFormat.qrCode],
+      cameraResolution: const Size(1920, 1080),
       autoStart: false,
     );
     _scanner = scanner;
@@ -359,30 +361,54 @@ class _ScanningView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: [
+                  Text(
+                    state.hasSignal
+                        ? '${(state.estimatedProgress * 100).floor()}%'
+                        : '--',
+                    style: AppTextStyles.counter(
+                      context,
+                    ).copyWith(fontSize: 34, color: palette.amberAccent),
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Text(
+                      state.hasSignal
+                          ? _remainingLabel(strings, state)
+                          : strings.receiveWaiting,
+                      textAlign: TextAlign.right,
+                      style: AppTextStyles.readout(context),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
               TransferProgressBar(
-                progress: state.progress,
+                progress: state.estimatedProgress,
                 accent: palette.amberAccent,
                 label: state.hasSignal
+                    ? strings.receivePacketsCaptured(
+                        state.framesAccepted,
+                        state.packetsNeeded,
+                      )
+                    : null,
+                trailing: state.hasSignal
                     ? strings.receiveStatBlocks(
                         state.solvedBlocks,
                         state.blockCount,
                       )
-                    : strings.receiveWaiting,
-                trailing: strings.receiveStatFramesRead(state.framesRead),
+                    : null,
               ),
               const SizedBox(height: AppSpacing.md),
               Text(
-                switch (state.phase) {
-                  ReceivePhase.verifying => strings.receiveVerifying,
-                  ReceivePhase.verifyRetry => strings.receiveVerifyRetry,
-                  _ => strings.receiveScanningHint,
-                },
+                _statusLine(strings, state),
                 textAlign: TextAlign.center,
-                style: AppTextStyles.readout(context).copyWith(
-                  color: state.phase == ReceivePhase.verifyRetry
-                      ? palette.danger
-                      : palette.textMuted,
-                ),
+                style: AppTextStyles.readout(
+                  context,
+                ).copyWith(color: _statusColor(palette, state)),
               ),
             ],
           ),
@@ -391,6 +417,30 @@ class _ScanningView extends StatelessWidget {
     );
   }
 }
+
+String _remainingLabel(AppLocalizations strings, ReceiveState state) {
+  final seconds = state.secondsRemaining;
+  if (seconds == null) return strings.receiveEstimating;
+  if (seconds <= 90) return strings.receiveRemainingSeconds(seconds);
+  return strings.receiveRemainingMinutes((seconds / 60).ceil());
+}
+
+String _statusLine(AppLocalizations strings, ReceiveState state) =>
+    switch (state.phase) {
+      ReceivePhase.verifying => strings.receiveVerifying,
+      ReceivePhase.verifyRetry => strings.receiveVerifyRetry,
+      _ when !state.hasSignal => strings.receiveScanningHint,
+      _ when state.isStalled => strings.receiveStalledHint,
+      _ when state.estimatedProgress >= 0.9 => strings.receiveAlmostThere,
+      _ => strings.receiveHoldSteady,
+    };
+
+Color _statusColor(GlassPalette palette, ReceiveState state) =>
+    switch (state.phase) {
+      ReceivePhase.verifyRetry => palette.danger,
+      _ when state.isStalled && state.hasSignal => palette.amberAccent,
+      _ => palette.textMuted,
+    };
 
 class _ScanFrameOverlay extends StatelessWidget {
   const _ScanFrameOverlay();

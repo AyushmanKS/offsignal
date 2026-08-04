@@ -220,6 +220,34 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String receivePacketsCaptured(int captured, int needed) {
+    return '$captured of about $needed packets';
+  }
+
+  @override
+  String receiveRemainingSeconds(int seconds) {
+    return 'about ${seconds}s left';
+  }
+
+  @override
+  String receiveRemainingMinutes(int minutes) {
+    return 'about $minutes min left';
+  }
+
+  @override
+  String get receiveEstimating => 'estimating…';
+
+  @override
+  String get receiveHoldSteady => 'Keep both phones steady — do not stop yet.';
+
+  @override
+  String get receiveStalledHint =>
+      'Barely reading anything. Move closer, hold steadier, or lower QR density on the sending phone in Settings.';
+
+  @override
+  String get receiveAlmostThere => 'Almost there — keep holding.';
+
+  @override
   String receiveStatFramesRead(int count) {
     return '$count frames read';
   }
@@ -314,6 +342,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsDefaultSpeed => 'Default cycle speed';
+
+  @override
+  String get settingsDensity => 'QR density';
+
+  @override
+  String get settingsDensityDescription =>
+      'Denser codes carry more data per frame, so transfers finish sooner — but they need a steadier, closer camera. Drop down a level if scanning stalls.';
+
+  @override
+  String get settingsDensityCompact => 'Compact';
+
+  @override
+  String get settingsDensityBalanced => 'Balanced';
+
+  @override
+  String get settingsDensityDense => 'Dense';
+
+  @override
+  String settingsDensityDetail(int bytes) {
+    return '$bytes bytes per frame';
+  }
 
   @override
   String get settingsHaptics => 'Haptics';

@@ -193,12 +193,20 @@ final class ComposeController extends Notifier<ComposeState> {
   }
 
   Future<Result<TransferPlan>> _runEstimate(PayloadEnvelope envelope) {
+    final blockSize = ref.read(settingsProvider).density.blockSizeBytes;
     if (kIsWeb || envelope.bytes.length < 64 * 1024) {
-      return Future.value(estimateTransfer(envelope));
+      return Future.value(estimateTransfer(envelope, blockSize: blockSize));
     }
-    return compute(estimateTransfer, envelope);
+    return compute(_estimateInIsolate, (
+      envelope: envelope,
+      blockSize: blockSize,
+    ));
   }
 }
+
+Result<TransferPlan> _estimateInIsolate(
+  ({PayloadEnvelope envelope, int blockSize}) request,
+) => estimateTransfer(request.envelope, blockSize: request.blockSize);
 
 final outgoingTransferProvider =
     NotifierProvider<OutgoingTransferController, OutgoingTransfer?>(
@@ -210,7 +218,10 @@ final class OutgoingTransferController extends Notifier<OutgoingTransfer?> {
   OutgoingTransfer? build() => null;
 
   Result<OutgoingTransfer> prepare(PayloadEnvelope envelope) {
-    final result = OutgoingTransfer.prepare(envelope);
+    final result = OutgoingTransfer.prepare(
+      envelope,
+      blockSize: ref.read(settingsProvider).density.blockSizeBytes,
+    );
     result.fold((transfer) => state = transfer, (_) {});
     return result;
   }

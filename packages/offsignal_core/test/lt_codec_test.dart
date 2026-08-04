@@ -84,31 +84,85 @@ void main() {
     });
   });
 
-  group('degree distribution', () {
-    test('ideal soliton histogram is sane over 10k samples', () {
+  group('packet schedule', () {
+    test('the systematic phase covers every block exactly once', () {
       final encoder = LTEncoder.create(
-        randomBytes(Random(5), 180 * 50),
+        randomBytes(Random(5), 900 * 40),
         seed: 11,
       ).valueOrNull!;
+      final k = encoder.blockCount;
+
+      final covered = <int>[];
+      for (var i = 0; i < k; i++) {
+        final indices = parsePacket(encoder.nextPacket()).valueOrNull!.indices;
+        expect(indices, hasLength(1));
+        covered.add(indices.single);
+      }
+
+      expect(covered.toSet(), hasLength(k));
+      expect(covered, orderedEquals(List<int>.generate(k, (i) => i)));
+    });
+
+    test('a lone systematic packet immediately solves one block', () {
+      final encoder = LTEncoder.create(
+        randomBytes(Random(31), 900 * 12),
+        seed: 4,
+      ).valueOrNull!;
+      final decoder = LTDecoder();
+
+      for (var i = 0; i < 5; i++) {
+        decoder.ingest(encoder.nextPacket());
+        expect(decoder.solvedBlocks, i + 1);
+      }
+    });
+
+    test('the coded phase spreads degrees beyond one', () {
+      final encoder = LTEncoder.create(
+        randomBytes(Random(5), 900 * 60),
+        seed: 11,
+      ).valueOrNull!;
+      final k = encoder.blockCount;
+
+      for (var i = 0; i < k; i++) {
+        encoder.nextPacket();
+      }
 
       final histogram = <int, int>{};
-      const samples = 10000;
-      for (var i = 0; i < samples; i++) {
+      for (var i = 0; i < k; i++) {
         final degree = parsePacket(
           encoder.nextPacket(),
         ).valueOrNull!.indices.length;
         histogram.update(degree, (value) => value + 1, ifAbsent: () => 1);
       }
 
-      final degreeOne = histogram[1]! / samples;
-      final degreeTwo = histogram[2]! / samples;
-      final degreeThree = histogram[3]! / samples;
-
-      expect(degreeOne, closeTo(1 / encoder.blockCount, 0.02));
-      expect(degreeTwo, closeTo(0.5, 0.03));
-      expect(degreeThree, closeTo(1 / 6, 0.03));
       expect(histogram.keys.reduce(max), lessThanOrEqualTo(maxPacketDegree));
       expect(histogram.keys.reduce(min), greaterThanOrEqualTo(1));
+      expect(histogram.keys.where((d) => d > 1), isNotEmpty);
+      expect(histogram[2], greaterThan(0));
+    });
+
+    test('progress climbs steadily instead of only avalanching', () {
+      final encoder = LTEncoder.create(
+        randomBytes(Random(77), 900 * 100),
+        seed: 12,
+      ).valueOrNull!;
+      final decoder = LTDecoder();
+      final random = Random(99);
+
+      final samples = <double>[];
+      var emitted = 0;
+      while (!decoder.isComplete && emitted < 50000) {
+        final packet = encoder.nextPacket();
+        emitted++;
+        if (random.nextDouble() < 0.2) decoder.ingest(packet);
+        if (emitted % 50 == 0) samples.add(decoder.estimatedProgress);
+      }
+
+      expect(samples.length, greaterThan(6));
+      for (var i = 1; i < samples.length; i++) {
+        expect(samples[i], greaterThanOrEqualTo(samples[i - 1]));
+      }
+      expect(samples[3], greaterThan(0.05));
     });
   });
 

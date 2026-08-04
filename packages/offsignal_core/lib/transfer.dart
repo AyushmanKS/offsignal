@@ -24,11 +24,13 @@ Result<Uint8List> decodeFrame(String frameText) {
   }
 }
 
-Result<TransferPlan> estimateTransfer(PayloadEnvelope envelope) =>
-    packPayload(envelope).fold(
-      (compressed) => planTransfer(compressed.length),
-      (error) => Failure(error),
-    );
+Result<TransferPlan> estimateTransfer(
+  PayloadEnvelope envelope, {
+  int blockSize = defaultBlockSizeBytes,
+}) => packPayload(envelope).fold(
+  (compressed) => planTransfer(compressed.length, blockSize: blockSize),
+  (error) => Failure(error),
+);
 
 Result<PayloadEnvelope> verifyAssembledPayload(Uint8List compressed) =>
     unpackPayload(compressed);
@@ -39,8 +41,9 @@ final class OutgoingTransfer {
   static Result<OutgoingTransfer> prepare(
     PayloadEnvelope envelope, {
     int? seed,
+    int blockSize = defaultBlockSizeBytes,
   }) => packPayload(envelope).fold(
-    (compressed) => planTransfer(compressed.length).fold(
+    (compressed) => planTransfer(compressed.length, blockSize: blockSize).fold(
       (plan) => Success(
         OutgoingTransfer._(
           plan,
@@ -76,6 +79,10 @@ final class IncomingTransfer {
   bool get isComplete => _decoder.isComplete;
 
   double get progress => _decoder.progress;
+
+  double get estimatedProgress => _decoder.estimatedProgress;
+
+  int get distinctPacketsNeeded => _decoder.distinctPacketsNeeded;
 
   void reset() => _decoder.reset();
 
