@@ -73,26 +73,50 @@ of scope; `SpeedController` in `offsignal_core` is the extension point for it.
 - **Nothing is fetched at runtime.** Fonts, icons, and animations all ship bundled so the app works
   in airplane mode.
 
-## Deployment
+## Distribution
 
-Set the two external URLs at build time:
+Everything here runs on free tiers, and there is no app store in the loop.
+
+**Android — sideloaded APK.** Generate a release keystore once, locally, and never commit it:
+
+```bash
+keytool -genkey -v -keystore offsignal-release.jks \
+  -keyalg RSA -keysize 2048 -validity 10000 -alias offsignal
+cp packages/offsignal_app/android/key.properties.example \
+   packages/offsignal_app/android/key.properties   # then fill in your paths and passwords
+flutter build apk --release
+```
+
+`key.properties`, `*.jks`, and `*.keystore` are gitignored. Without a `key.properties` the release
+build falls back to debug signing so `flutter run --release` still works locally; CI restores the
+real keystore from the `ANDROID_KEYSTORE_BASE64`, `ANDROID_STORE_PASSWORD`, `ANDROID_KEY_PASSWORD`,
+and `ANDROID_KEY_ALIAS` secrets and publishes the signed APK to a GitHub Release.
+
+**iOS — via the web build.** There is no native iOS build; iOS users open the site in Safari and add
+it to their home screen. Native iOS is deferred until a paid Apple Developer account exists, not
+worked around.
+
+**Web.** Deploy `build/web` to any free static host with automatic HTTPS (Cloudflare Pages by
+default in CI, via `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`). Camera access requires HTTPS in
+every browser. `web/privacy.html` and `web/download.html` deploy alongside the app.
+
+Set the external URLs at build time:
 
 ```bash
 flutter build web --release \
   --dart-define=PRIVACY_POLICY_URL=https://your-host/privacy.html \
-  --dart-define=SOURCE_URL=https://github.com/your-org/offsignal
+  --dart-define=SOURCE_URL=https://github.com/your-org/offsignal \
+  --dart-define=APK_DOWNLOAD_URL=https://github.com/your-org/offsignal/releases/latest
 ```
 
-`web/privacy.html` deploys alongside the web build. Camera access requires HTTPS in every browser.
+## Error visibility
 
-Crash reporting is off unless a DSN is supplied:
-
-```bash
---dart-define=SENTRY_DSN=https://...
-```
-
-When enabled, `beforeSend` strips users, requests, and breadcrumbs so no message text, file contents,
-or file names can leave the device.
+There is no third-party crash reporting service, and the Android app requests **no INTERNET
+permission** — it cannot phone home even in principle, which CI asserts against the merged release
+manifest on every build. Errors are caught centrally as `AppException` and logged locally through
+`AppLog`, which records only a screen name and a failure type. Read them with `flutter logs`,
+Logcat, or Safari's web inspector. Sentry's free tier remains a documented future option; wiring it
+in is deliberately not part of v1.
 
 ## Regenerating brand assets
 
@@ -107,7 +131,13 @@ dart run flutter_native_splash:create
 
 Attach to any release PR. The light channel cannot be exercised by automated tests alone.
 
-- [ ] Two-device round trip: iOS <-> Android, iOS <-> iOS, Android <-> Android, web <-> native
+- [ ] Two-device round trip: Android <-> Android (native), Android <-> web, web <-> web. Native iOS
+      is excluded in v1; test iPhones through Safari
+- [ ] **Scanning works on a real device with the release APK**, which ships no INTERNET permission.
+      The ML Kit barcode model is bundled, so this should hold — but it is the one behaviour that
+      the permission strip could plausibly break, and CI cannot catch it
+- [ ] Android app info screen lists Camera as the only permission
+- [ ] The APK installs from the download page, following the "install unknown apps" steps as written
 - [ ] Bright room and dim room; torch toggle helps in the dim case
 - [ ] Close range and arm's length
 - [ ] Text payload, image payload, and PDF payload each arrive byte-identical

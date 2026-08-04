@@ -11,6 +11,11 @@ abstract final class AppInfo {
     'SOURCE_URL',
     defaultValue: 'https://github.com/offsignal/offsignal',
   );
+
+  static const apkDownloadUrl = String.fromEnvironment(
+    'APK_DOWNLOAD_URL',
+    defaultValue: 'https://github.com/offsignal/offsignal/releases/latest',
+  );
 }
 
 final appVersionProvider = Provider<String>(

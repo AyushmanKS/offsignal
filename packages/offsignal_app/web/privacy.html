@@ -89,12 +89,16 @@
     leave your device and contain nothing about what you have sent or received.</p>
 
   <h2>Network access</h2>
-  <p>OffSignal is designed to work fully offline, including in airplane mode. All fonts, icons, and
-    animations are bundled with the app and are never fetched at runtime.</p>
-  <p>If a build ships with crash reporting enabled, anonymous crash and error reports are the only
-    network requests the app ever makes. Those reports are scrubbed before they are sent: they
-    contain the screen name, exception type, and stack trace only. Message text, file contents, and
-    file names are explicitly stripped and are never included.</p>
+  <p><strong>The Android app makes no network calls of any kind.</strong> It does not request the
+    internet permission at all, so it cannot send anything anywhere even if it wanted to. You can
+    verify that yourself in Android's app info screen.</p>
+  <p>There is no analytics, no crash reporting service, and no third-party SDK collecting anything.
+    All fonts, icons, and animations are bundled with the app and are never fetched at runtime, so
+    OffSignal works fully offline including in airplane mode.</p>
+  <p>Errors are logged locally on your device only, and record just the screen name and the type of
+    error — never message text, file contents, or file names. Those logs never leave your device.</p>
+  <p>The web version is served from a static host over HTTPS. Loading the page is a normal web
+    request; once loaded, the app itself makes no further network calls.</p>
 
   <h2>Children</h2>
   <p>OffSignal collects no personal information from anyone, including children.</p>

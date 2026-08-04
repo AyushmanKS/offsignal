@@ -1,4 +1,4 @@
-package com.example.offsignal
+package app.offsignal
 
 import io.flutter.embedding.android.FlutterActivity
 

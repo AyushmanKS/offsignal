@@ -75,7 +75,11 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
       final bytes = picked.bytes;
       if (bytes == null || bytes.isEmpty) {
         if (mounted) {
-          AppFeedback.showErrorSnackBar(context, const FileUnreadable());
+          AppFeedback.showErrorSnackBar(
+            context,
+            const FileUnreadable(),
+            screen: 'compose',
+          );
         }
         return;
       }
@@ -92,7 +96,11 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
           );
     } on Object {
       if (mounted) {
-        AppFeedback.showErrorSnackBar(context, const FileUnreadable());
+        AppFeedback.showErrorSnackBar(
+          context,
+          const FileUnreadable(),
+          screen: 'compose',
+        );
       }
     } finally {
       if (mounted) setState(() => _isPickingFile = false);
@@ -120,6 +128,7 @@ class _ComposeScreenState extends ConsumerState<ComposeScreen> {
         (error) => AppFeedback.showErrorSnackBar(
           context,
           appExceptionFromCodec(error),
+          screen: 'compose',
         ),
       );
     } finally {

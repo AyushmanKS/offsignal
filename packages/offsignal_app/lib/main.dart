@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'core/app_info.dart';
-import 'core/observability/sentry_setup.dart';
+import 'core/observability/app_logger.dart';
 import 'core/settings/app_settings.dart';
 
 Future<void> main() async {
@@ -20,7 +20,7 @@ Future<void> main() async {
   final preferences = await SharedPreferences.getInstance();
   final packageInfo = await PackageInfo.fromPlatform();
 
-  await runWithCrashReporting(() async {
+  await runGuarded(() async {
     runApp(
       ProviderScope(
         overrides: [

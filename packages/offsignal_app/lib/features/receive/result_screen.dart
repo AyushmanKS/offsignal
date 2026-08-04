@@ -65,7 +65,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
       if (!mounted) return;
       AppFeedback.showToast(context, AppLocalizations.of(context).resultSaved);
     } on Object {
-      if (mounted) AppFeedback.showErrorSnackBar(context, const SaveFailed());
+      if (mounted) {
+        AppFeedback.showErrorSnackBar(
+          context,
+          const SaveFailed(),
+          screen: 'result',
+        );
+      }
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -89,7 +95,13 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
         ),
       );
     } on Object {
-      if (mounted) AppFeedback.showErrorSnackBar(context, const ShareFailed());
+      if (mounted) {
+        AppFeedback.showErrorSnackBar(
+          context,
+          const ShareFailed(),
+          screen: 'result',
+        );
+      }
     } finally {
       if (mounted) setState(() => _isSharing = false);
     }

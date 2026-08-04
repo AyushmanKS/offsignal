@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>OffSignal — Get the Android app</title>
+  <meta name="description" content="Download the OffSignal Android app, or use it straight from your browser.">
+  <meta name="theme-color" content="#0A0E14">
+  <style>
+    :root {
+      color-scheme: dark light;
+      --bg: #0A0E14;
+      --tint: #121A26;
+      --surface: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #EDEEF3;
+      --muted: #8A94A6;
+      --accent: #4FD8FF;
+      --amber: #FFB454;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #F4F6FA;
+        --tint: #E3EAF5;
+        --surface: rgba(255, 255, 255, 0.72);
+        --border: rgba(20, 30, 45, 0.08);
+        --text: #12151C;
+        --muted: #5B6472;
+        --accent: #0EA5C4;
+        --amber: #B4700E;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 3rem 1.25rem 4rem;
+      background: radial-gradient(80rem 50rem at 20% -10%, var(--tint), var(--bg) 60%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-text-size-adjust: 100%;
+    }
+    main { max-width: 40rem; margin: 0 auto; }
+    h1 { font-size: 2.1rem; line-height: 1.15; letter-spacing: -0.03em; margin: 0 0 0.5rem; }
+    h2 { font-size: 1.1rem; margin: 0 0 0.75rem; letter-spacing: -0.01em; }
+    p { color: var(--muted); margin: 0 0 1rem; }
+    .lede { font-size: 1.1rem; margin-bottom: 2.5rem; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      backdrop-filter: blur(20px);
+    }
+    .cta {
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: #0A0E14;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      padding: 1rem 1.5rem;
+      border-radius: 14px;
+      margin-bottom: 0.75rem;
+    }
+    .cta.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+    ol { padding-left: 1.25rem; color: var(--muted); margin: 0; }
+    li { margin-bottom: 0.5rem; }
+    .note {
+      border-left: 2px solid var(--amber);
+      padding-left: 0.9rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    footer { margin-top: 2.5rem; font-size: 0.85rem; color: var(--muted); }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Get OffSignal</h1>
+  <p class="lede">Move a note, link, or small file between phones using only light. No WiFi, no
+    Bluetooth, no account, no internet.</p>
+
+  <div class="card">
+    <h2>Android</h2>
+    <p>Install the app directly. It is not on the Play Store, so Android will ask you to confirm
+      the install once.</p>
+    <a class="cta" id="apk-link" href="https://github.com/offsignal/offsignal/releases/latest">
+      Download the Android app
+    </a>
+    <ol>
+      <li>Tap the download above and open the downloaded <strong>.apk</strong> file.</li>
+      <li>Android will warn that this source isn't allowed yet — tap <strong>Settings</strong>.</li>
+      <li>Turn on <strong>Allow from this source</strong>, then go back and tap
+        <strong>Install</strong>.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>iPhone, or no install at all</h2>
+    <p>OffSignal runs fully in the browser — same app, same code.</p>
+    <a class="cta secondary" href="./">Open OffSignal in your browser</a>
+    <p class="note">On iPhone, open it in Safari, tap the Share button, then
+      <strong>Add to Home Screen</strong>. It then launches like an app and keeps working with no
+      signal.</p>
+  </div>
+
+  <div class="card">
+    <h2>Why it asks for so little</h2>
+    <p>The Android app requests exactly one permission — the camera, to read the light signal. It
+      does not request internet access at all. Nothing you send ever leaves the two phones.</p>
+    <p><a href="privacy.html">Read the privacy policy</a></p>
+  </div>
+
+  <footer>OffSignal — no accounts, no cloud, no radio.</footer>
+</main>
+</body>
+</html>

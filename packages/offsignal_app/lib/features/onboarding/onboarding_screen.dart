@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/app_info.dart';
 import '../../core/assets/app_asset_widgets.dart';
 import '../../core/assets/app_assets.dart';
 import '../../core/l10n/generated/app_localizations.dart';
@@ -21,11 +22,15 @@ final class _OnboardingPanel {
     required this.title,
     required this.body,
     required this.imagePath,
+    this.actionLabel,
+    this.actionUrl,
   });
 
   final String title;
   final String body;
   final String imagePath;
+  final String? actionLabel;
+  final String? actionUrl;
 }
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -58,15 +63,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       imagePath: AppImages.onboardingPermissions,
     ),
     if (_host.isWeb)
-      _OnboardingPanel(
-        title: strings.onboardingInstallTitle,
-        body: _host.prefersIosInstallInstructions
-            ? strings.onboardingInstallIosBody
-            : strings.onboardingInstallAndroidBody,
-        imagePath: _host.prefersIosInstallInstructions
-            ? AppImages.onboardingAddToHomeIos
-            : AppImages.onboardingAddToHomeAndroid,
-      ),
+      if (_host.prefersIosInstallInstructions)
+        _OnboardingPanel(
+          title: strings.onboardingInstallTitle,
+          body: strings.onboardingInstallIosBody,
+          imagePath: AppImages.onboardingAddToHomeIos,
+        )
+      else
+        _OnboardingPanel(
+          title: strings.onboardingInstallTitle,
+          body: strings.onboardingInstallAndroidBody,
+          imagePath: AppImages.onboardingAddToHomeAndroid,
+          actionLabel: strings.onboardingDownloadAndroidApp,
+          actionUrl: AppInfo.apkDownloadUrl,
+        ),
   ];
 
   Future<void> _finish() async {
@@ -170,6 +180,15 @@ class _PanelView extends StatelessWidget {
                     context,
                   ).textTheme.bodyMedium?.copyWith(color: palette.textMuted),
                 ),
+                if (panel.actionLabel != null && panel.actionUrl != null) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  GlassButton(
+                    label: panel.actionLabel!,
+                    iconPath: AppIcons.downloadSave,
+                    variant: GlassButtonVariant.secondary,
+                    onPressed: () => openExternalUrl(panel.actionUrl!),
+                  ),
+                ],
               ],
             ),
           ),

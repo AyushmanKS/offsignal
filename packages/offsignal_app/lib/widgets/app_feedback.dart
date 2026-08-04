@@ -7,6 +7,7 @@ import '../core/assets/app_assets.dart';
 import '../core/errors/app_exception.dart';
 import '../core/errors/error_messages.dart';
 import '../core/l10n/generated/app_localizations.dart';
+import '../core/observability/app_logger.dart';
 import '../core/theme/design_tokens.dart';
 import '../core/theme/motion.dart';
 import 'glass_button.dart';
@@ -32,7 +33,9 @@ abstract final class AppFeedback {
     BuildContext context,
     AppException exception, {
     VoidCallback? onRetry,
+    String screen = 'unknown',
   }) {
+    AppLog.failure(exception, screen: screen);
     final strings = AppLocalizations.of(context);
     final messenger = ScaffoldMessenger.of(context);
     messenger

@@ -1,0 +1,4 @@
+storePassword=your-keystore-password
+keyPassword=your-key-password
+keyAlias=offsignal
+storeFile=/absolute/path/to/offsignal-release.jks

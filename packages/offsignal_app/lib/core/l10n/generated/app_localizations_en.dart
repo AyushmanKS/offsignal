@@ -275,15 +275,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Receiving needs camera access. Nothing is recorded, stored, or uploaded — what you send never leaves the two phones.';
 
   @override
-  String get onboardingInstallTitle => 'Add OffSignal to your home screen';
+  String get onboardingInstallTitle => 'Keep OffSignal one tap away';
 
   @override
   String get onboardingInstallIosBody =>
-      'Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it\'s installed.';
+      'Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it\'s on your home screen.';
 
   @override
   String get onboardingInstallAndroidBody =>
-      'Tap the menu in Chrome, then choose Install app. OffSignal keeps working with no signal once it\'s installed.';
+      'Tap the menu in Chrome, then choose Install app. For the smoothest experience you can also download the Android app directly — no Play Store account needed.';
+
+  @override
+  String get onboardingDownloadAndroidApp => 'Download the Android app';
 
   @override
   String get onboardingGetStarted => 'Get started';

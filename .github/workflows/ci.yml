@@ -47,33 +47,16 @@ jobs:
         working-directory: packages/offsignal_app
         run: flutter test
 
-  build:
-    name: Build ${{ matrix.target }}
+  android:
+    name: Signed release APK
     needs: verify
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: apk
-            os: ubuntu-latest
-            command: flutter build apk --release
-          - target: appbundle
-            os: ubuntu-latest
-            command: flutter build appbundle --release
-          - target: web
-            os: ubuntu-latest
-            command: flutter build web --release
-          - target: ipa
-            os: macos-latest
-            command: flutter build ios --release --no-codesign
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: packages/offsignal_app
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
-        if: matrix.target == 'apk' || matrix.target == 'appbundle'
         with:
           distribution: temurin
           java-version: '17'
@@ -84,14 +67,95 @@ jobs:
           cache: true
 
       - run: flutter pub get
-      - run: ${{ matrix.command }}
+
+      - name: Restore release keystore
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/offsignal-release.jks"
+          cat > android/key.properties <<EOF
+          storePassword=$STORE_PASSWORD
+          keyPassword=$KEY_PASSWORD
+          keyAlias=$KEY_ALIAS
+          storeFile=$RUNNER_TEMP/offsignal-release.jks
+          EOF
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Assert the APK requests no INTERNET permission
+        run: |
+          MANIFEST=build/app/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
+          test -f "$MANIFEST" || MANIFEST=$(find build -name AndroidManifest.xml -path '*merged_manifest*release*' | head -1)
+          echo "Checking $MANIFEST"
+          if grep -q 'android.permission.INTERNET' "$MANIFEST"; then
+            echo "::error::Release manifest requests INTERNET; PRD section 12.1 forbids it."
+            grep -n 'uses-permission' "$MANIFEST"
+            exit 1
+          fi
+          grep -n 'uses-permission' "$MANIFEST"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: offsignal-${{ matrix.target }}
-          path: |
-            packages/offsignal_app/build/app/outputs/flutter-apk/*.apk
-            packages/offsignal_app/build/app/outputs/bundle/release/*.aab
-            packages/offsignal_app/build/web
-            packages/offsignal_app/build/ios/iphoneos/*.app
-          if-no-files-found: ignore
+          name: offsignal-apk
+          path: packages/offsignal_app/build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Publish to a GitHub Release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f1)
+          TAG="v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" build/app/outputs/flutter-apk/app-release.apk --clobber
+          else
+            gh release create "$TAG" build/app/outputs/flutter-apk/app-release.apk \
+              --title "OffSignal $VERSION" \
+              --notes "Sideload the APK, or use OffSignal in your browser. No Play Store account needed."
+          fi
+
+  web:
+    name: Web build and deploy
+    needs: verify
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/offsignal_app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Build web
+        run: |
+          flutter build web --release \
+            --dart-define=PRIVACY_POLICY_URL=${{ vars.PRIVACY_POLICY_URL || 'privacy.html' }} \
+            --dart-define=SOURCE_URL=${{ vars.SOURCE_URL || format('{0}/{1}', github.server_url, github.repository) }} \
+            --dart-define=APK_DOWNLOAD_URL=${{ vars.APK_DOWNLOAD_URL || format('{0}/{1}/releases/latest', github.server_url, github.repository) }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: offsignal-web
+          path: packages/offsignal_app/build/web
+
+      - name: Deploy to Cloudflare Pages
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy packages/offsignal_app/build/web
+            --project-name=offsignal
+            --branch=${{ github.head_ref || github.ref_name }}
+          workingDirectory: .

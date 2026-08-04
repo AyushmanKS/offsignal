@@ -553,20 +553,26 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingInstallTitle.
   ///
   /// In en, this message translates to:
-  /// **'Add OffSignal to your home screen'**
+  /// **'Keep OffSignal one tap away'**
   String get onboardingInstallTitle;
 
   /// No description provided for @onboardingInstallIosBody.
   ///
   /// In en, this message translates to:
-  /// **'Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it\'s installed.'**
+  /// **'Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it\'s on your home screen.'**
   String get onboardingInstallIosBody;
 
   /// No description provided for @onboardingInstallAndroidBody.
   ///
   /// In en, this message translates to:
-  /// **'Tap the menu in Chrome, then choose Install app. OffSignal keeps working with no signal once it\'s installed.'**
+  /// **'Tap the menu in Chrome, then choose Install app. For the smoothest experience you can also download the Android app directly — no Play Store account needed.'**
   String get onboardingInstallAndroidBody;
+
+  /// No description provided for @onboardingDownloadAndroidApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Download the Android app'**
+  String get onboardingDownloadAndroidApp;
 
   /// No description provided for @onboardingGetStarted.
   ///

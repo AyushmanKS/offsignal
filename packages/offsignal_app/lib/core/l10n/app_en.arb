@@ -102,9 +102,10 @@
   "onboardingLightBody": "One phone shows a fast stream of codes. The other reads them with its camera. No WiFi, no Bluetooth, no account, no internet.",
   "onboardingPermissionsTitle": "Camera only",
   "onboardingPermissionsBody": "Receiving needs camera access. Nothing is recorded, stored, or uploaded — what you send never leaves the two phones.",
-  "onboardingInstallTitle": "Add OffSignal to your home screen",
-  "onboardingInstallIosBody": "Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it's installed.",
-  "onboardingInstallAndroidBody": "Tap the menu in Chrome, then choose Install app. OffSignal keeps working with no signal once it's installed.",
+  "onboardingInstallTitle": "Keep OffSignal one tap away",
+  "onboardingInstallIosBody": "Tap the Share button in Safari, then choose Add to Home Screen. OffSignal keeps working with no signal once it's on your home screen.",
+  "onboardingInstallAndroidBody": "Tap the menu in Chrome, then choose Install app. For the smoothest experience you can also download the Android app directly — no Play Store account needed.",
+  "onboardingDownloadAndroidApp": "Download the Android app",
   "onboardingGetStarted": "Get started",
 
   "settingsTitle": "Settings",

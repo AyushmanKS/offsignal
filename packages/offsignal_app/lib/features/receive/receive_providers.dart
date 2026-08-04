@@ -4,6 +4,7 @@ import 'package:offsignal_core/offsignal_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../core/errors/app_exception.dart';
+import '../../core/observability/app_logger.dart';
 
 enum CameraAccess { unknown, granted, denied, permanentlyDenied, unavailable }
 
@@ -157,10 +158,9 @@ final class ReceiveController extends Notifier<ReceiveState> {
   void toggleTorch() => state = state.copyWith(torchOn: !state.torchOn);
 
   void reportCameraFailure() {
-    state = state.copyWith(
-      phase: ReceivePhase.idle,
-      error: const CameraUnavailable(),
-    );
+    const failure = CameraUnavailable();
+    AppLog.failure(failure, screen: 'receive');
+    state = state.copyWith(phase: ReceivePhase.idle, error: failure);
   }
 
   Future<void> onFrameDetected(String frameText) async {
@@ -201,6 +201,7 @@ final class ReceiveController extends Notifier<ReceiveState> {
   }
 
   void _failVerification() {
+    AppLog.failure(const TransferCorrupted(), screen: 'receive');
     _transfer = IncomingTransfer();
     _isVerifying = false;
     state = state.copyWith(
