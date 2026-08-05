@@ -26,7 +26,7 @@ const targetBlockCount = 900;
 const maxPacketDegree = 32;
 
 const defaultCycleInterval = Duration(milliseconds: 120);
-const fastestCycleInterval = Duration(milliseconds: 60);
+const fastestCycleInterval = Duration(milliseconds: 50);
 const slowestCycleInterval = Duration(milliseconds: 400);
 
 const softPayloadWarningBytes = 2 * 1024 * 1024;

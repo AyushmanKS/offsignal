@@ -8,8 +8,6 @@ const _cycleIntervalKey = 'settings.cycleIntervalMs';
 const _densityKey = 'settings.qrDensity';
 const _hapticsKey = 'settings.haptics';
 const _onboardingSeenKey = 'settings.onboardingSeen';
-const _schemaVersionKey = 'settings.schemaVersion';
-const _currentSchemaVersion = 3;
 
 @immutable
 final class AppSettings {
@@ -119,14 +117,6 @@ final class SettingsController extends Notifier<AppSettings> {
   }
 
   static Duration _readCycleInterval(SharedPreferences preferences) {
-    final storedVersion = preferences.getInt(_schemaVersionKey) ?? 1;
-    if (storedVersion < _currentSchemaVersion) {
-      preferences
-        ..setInt(_schemaVersionKey, _currentSchemaVersion)
-        ..remove(_cycleIntervalKey);
-      return defaultCycleInterval;
-    }
-
     final stored = preferences.getInt(_cycleIntervalKey);
     if (stored == null) return defaultCycleInterval;
     return Duration(

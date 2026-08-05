@@ -159,7 +159,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get broadcastingSpeedHelp =>
-      'If the other phone is stuck near 0%, slow this down until it starts climbing. Speed it up only while it keeps making progress.';
+      'Slow this down if the other phone isn\'t picking frames up.';
 
   @override
   String get broadcastingPausedTitle => 'Paused';

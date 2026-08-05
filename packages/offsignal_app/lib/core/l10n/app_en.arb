@@ -58,7 +58,7 @@
   "@broadcastingSpeedValue": {
     "placeholders": { "milliseconds": { "type": "int" } }
   },
-  "broadcastingSpeedHelp": "If the other phone is stuck near 0%, slow this down until it starts climbing. Speed it up only while it keeps making progress.",
+  "broadcastingSpeedHelp": "Slow this down if the other phone isn't picking frames up.",
   "broadcastingPausedTitle": "Paused",
   "broadcastingPausedBody": "Broadcasting stopped while OffSignal was in the background.",
   "broadcastingResume": "Resume",
