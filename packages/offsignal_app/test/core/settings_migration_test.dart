@@ -15,19 +15,25 @@ Future<ProviderContainer> containerWith(Map<String, Object> values) async {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('an install from before the speed change is migrated forward', () async {
-    final container = await containerWith({'settings.cycleIntervalMs': 120});
-    addTearDown(container.dispose);
+  test(
+    'an install carrying a stale default speed is migrated forward',
+    () async {
+      final container = await containerWith({
+        'settings.schemaVersion': 2,
+        'settings.cycleIntervalMs': 70,
+      });
+      addTearDown(container.dispose);
 
-    expect(
-      container.read(settingsProvider).cycleInterval,
-      defaultCycleInterval,
-    );
-  });
+      expect(
+        container.read(settingsProvider).cycleInterval,
+        defaultCycleInterval,
+      );
+    },
+  );
 
   test('a speed chosen after the migration is respected', () async {
     final container = await containerWith({
-      'settings.schemaVersion': 2,
+      'settings.schemaVersion': 3,
       'settings.cycleIntervalMs': 150,
     });
     addTearDown(container.dispose);
@@ -46,7 +52,7 @@ void main() {
 
   test('stored speeds are clamped into the supported range', () async {
     final container = await containerWith({
-      'settings.schemaVersion': 2,
+      'settings.schemaVersion': 3,
       'settings.cycleIntervalMs': 5,
     });
     addTearDown(container.dispose);

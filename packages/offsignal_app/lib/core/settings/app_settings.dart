@@ -9,7 +9,7 @@ const _densityKey = 'settings.qrDensity';
 const _hapticsKey = 'settings.haptics';
 const _onboardingSeenKey = 'settings.onboardingSeen';
 const _schemaVersionKey = 'settings.schemaVersion';
-const _currentSchemaVersion = 2;
+const _currentSchemaVersion = 3;
 
 @immutable
 final class AppSettings {
