@@ -159,7 +159,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get broadcastingSpeedHelp =>
-      'Slow this down if the other phone isn\'t picking frames up.';
+      'Faster is usually better — missed frames cost almost nothing, but the same frame read twice is wasted. Only slow down if the other phone stops making progress.';
 
   @override
   String get broadcastingPausedTitle => 'Paused';

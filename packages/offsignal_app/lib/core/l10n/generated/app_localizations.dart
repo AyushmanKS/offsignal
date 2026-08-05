@@ -343,7 +343,7 @@ abstract class AppLocalizations {
   /// No description provided for @broadcastingSpeedHelp.
   ///
   /// In en, this message translates to:
-  /// **'Slow this down if the other phone isn\'t picking frames up.'**
+  /// **'Faster is usually better — missed frames cost almost nothing, but the same frame read twice is wasted. Only slow down if the other phone stops making progress.'**
   String get broadcastingSpeedHelp;
 
   /// No description provided for @broadcastingPausedTitle.

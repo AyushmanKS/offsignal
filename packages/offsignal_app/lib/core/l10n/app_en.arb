@@ -58,7 +58,7 @@
   "@broadcastingSpeedValue": {
     "placeholders": { "milliseconds": { "type": "int" } }
   },
-  "broadcastingSpeedHelp": "Slow this down if the other phone isn't picking frames up.",
+  "broadcastingSpeedHelp": "Faster is usually better — missed frames cost almost nothing, but the same frame read twice is wasted. Only slow down if the other phone stops making progress.",
   "broadcastingPausedTitle": "Paused",
   "broadcastingPausedBody": "Broadcasting stopped while OffSignal was in the background.",
   "broadcastingResume": "Resume",
