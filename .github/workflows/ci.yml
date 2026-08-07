@@ -43,13 +43,36 @@ jobs:
         working-directory: packages/offsignal_tools
         run: dart test
 
-      - name: App tests, goldens, and asset guard
+      - name: App tests and asset guard
         working-directory: packages/offsignal_app
-        run: flutter test
+        run: flutter test test/core test/features
+
+  goldens:
+    name: Golden tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+          cache: true
+
+      - run: flutter pub get
+
+      - name: Golden tests
+        working-directory: packages/offsignal_app
+        run: flutter test test/golden
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: golden-failures
+          path: packages/offsignal_app/test/golden/failures
 
   android:
     name: Signed release APK
-    needs: verify
+    needs: [verify, goldens]
     runs-on: ubuntu-latest
     env:
       KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
@@ -121,7 +144,7 @@ jobs:
 
   web:
     name: Web build and deploy
-    needs: verify
+    needs: [verify, goldens]
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

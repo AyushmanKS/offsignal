@@ -158,6 +158,11 @@ The codec suite includes property tests that reconstruct payloads byte-for-byte 
 simulated packet loss, adversarial tests asserting a corrupted transfer can *never* be reported as
 successful, and golden tests pinning the glass theme in both light and dark.
 
+Golden tests run on a macOS runner in CI rather than alongside the rest of the suite on Linux.
+`BackdropFilter` rasterises differently across platforms, and the glass theme leans on it heavily
+enough that the same widget tree differs by 11–17% between the two — far too much to tolerate
+without also masking real regressions. Pinning goldens to one platform keeps them strict.
+
 CI additionally asserts that the built release APK requests no `INTERNET` permission, so that
 guarantee is verified on the real artifact rather than trusted.
 
