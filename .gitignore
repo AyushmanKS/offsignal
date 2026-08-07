@@ -64,3 +64,6 @@ build/
 
 # Build artifacts collected by `make apk`
 dist/
+
+# Golden test failure artifacts
+**/test/golden/failures/
