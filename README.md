@@ -103,7 +103,7 @@ Makefile:
 make setup     # resolve dependencies across the workspace
 make run       # run the app        (make run DEVICE=chrome to pick a device)
 make test      # every suite: codec, tooling, app
-make verify    # everything CI runs: analyze, format, guards, tests
+make verify    # everything CI runs: analyze, format, guards, workflow lint, tests
 make apk       # signed release APK, reported with its signing key and permissions
 make web       # release web bundle
 make help      # all targets
@@ -149,6 +149,10 @@ make test      # codec + tooling + app
 make soak      # 1000 randomized send-to-receive runs through a lossy channel
 make verify    # what CI enforces on every push
 ```
+
+`make verify` also lints the GitHub Actions workflows with
+[actionlint](https://github.com/rhysd/actionlint) when it is installed (`brew install actionlint`),
+so a malformed workflow fails locally rather than by email after a push.
 
 The codec suite includes property tests that reconstruct payloads byte-for-byte through up to 70%
 simulated packet loss, adversarial tests asserting a corrupted transfer can *never* be reported as

@@ -7,7 +7,7 @@ DEVICE_FLAG := $(if $(DEVICE),-d $(DEVICE),)
 
 .DEFAULT_GOAL := help
 .PHONY: help setup run run-web run-android devices test test-core test-app test-tools soak \
-        analyze format format-fix comments verify apk web l10n icons goldens clean
+        analyze format format-fix comments workflows verify apk web l10n icons goldens clean
 
 help:
 	@echo "OffSignal — run any of these from the repository root."
@@ -29,6 +29,7 @@ help:
 	@echo "  make format       Check formatting without writing"
 	@echo "  make format-fix   Apply formatting"
 	@echo "  make comments     Enforce the no-comments rule (PRD section 4.1)"
+	@echo "  make workflows    Lint the GitHub Actions workflows"
 	@echo ""
 	@echo "  make apk          Build the signed release APK"
 	@echo "  make web          Build the release web bundle"
@@ -80,7 +81,15 @@ format-fix:
 comments:
 	dart run $(TOOLS)/bin/check_comments.dart $(CORE)/lib $(CORE)/test $(APP)/lib
 
-verify: analyze format comments test
+workflows:
+	@if command -v actionlint >/dev/null 2>&1; then \
+		actionlint && echo "Workflows are valid."; \
+	else \
+		echo "actionlint not installed; skipping workflow lint."; \
+		echo "Install it with: brew install actionlint"; \
+	fi
+
+verify: analyze format comments workflows test
 	@echo "All checks passed."
 
 apk:
